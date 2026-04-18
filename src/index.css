@@ -1,0 +1,201 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 15px;
+  }
+
+  body {
+    @apply bg-surface-100 text-surface-800;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight text-surface-900;
+  }
+}
+
+@layer components {
+  /* ─── Buttons ──────────────────────────────────────────────── */
+  .btn {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm
+           transition-all duration-200 focus-visible:outline-none focus-visible:ring-2
+           focus-visible:ring-offset-1 disabled:opacity-40 disabled:cursor-not-allowed
+           select-none whitespace-nowrap active:scale-[0.97];
+  }
+  .btn-primary {
+    @apply btn bg-surface-900 text-white hover:bg-surface-700
+           focus-visible:ring-surface-700;
+  }
+  .btn-secondary {
+    @apply btn bg-white text-surface-700 border border-surface-300
+           hover:bg-surface-50 hover:border-surface-400
+           focus-visible:ring-surface-400;
+  }
+  .btn-danger {
+    @apply btn bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500;
+  }
+  .btn-ghost {
+    @apply btn text-surface-500 hover:bg-surface-200 hover:text-surface-800
+           focus-visible:ring-surface-400;
+  }
+  .btn-success {
+    @apply btn bg-emerald-600 text-white hover:bg-emerald-700
+           focus-visible:ring-emerald-500;
+  }
+  .btn-sm   { @apply px-3 py-1.5 text-xs; }
+  .btn-icon { @apply btn p-2; }
+
+  /* ─── Cards ────────────────────────────────────────────────── */
+  .card {
+    @apply bg-white rounded-xl shadow-card border border-surface-200;
+  }
+  .card-header {
+    @apply px-6 py-4 border-b border-surface-100;
+  }
+  .card-body {
+    @apply px-6 py-4;
+  }
+
+  /* ─── Forms ─────────────────────────────────────────────────── */
+  .input {
+    @apply block w-full rounded-lg border border-surface-300 bg-white px-3 py-2.5
+           text-sm text-surface-800 placeholder-surface-400
+           focus:outline-none focus:ring-2 focus:ring-surface-800 focus:border-transparent
+           disabled:bg-surface-100 disabled:text-surface-400 disabled:cursor-not-allowed
+           transition-all duration-200;
+  }
+  .label {
+    @apply block text-xs font-semibold text-surface-600 mb-1.5 uppercase tracking-wide;
+  }
+  .form-group  { @apply space-y-0; }
+  .input-error { @apply border-red-400 focus:ring-red-500; }
+  .error-msg   { @apply text-xs text-red-500 mt-1.5; }
+
+  /* ─── Table ─────────────────────────────────────────────────── */
+  .table-wrapper {
+    @apply overflow-x-auto rounded-xl border border-surface-200 bg-white;
+  }
+  .table { @apply w-full text-sm; }
+  .table thead th {
+    @apply px-4 py-3 text-left text-xs font-semibold text-surface-500 uppercase
+           tracking-wider bg-surface-50 border-b border-surface-200;
+  }
+  .table tbody tr {
+    @apply border-b border-surface-100 last:border-0
+           hover:bg-surface-50 transition-colors duration-150;
+  }
+  .table tbody td { @apply px-4 py-3 text-surface-700; }
+
+  /* ─── Badge ─────────────────────────────────────────────────── */
+  .badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold;
+  }
+  .badge-green  { @apply badge bg-emerald-50  text-emerald-700 ring-1 ring-emerald-200; }
+  .badge-red    { @apply badge bg-red-50      text-red-600     ring-1 ring-red-200; }
+  .badge-blue   { @apply badge bg-indigo-50   text-indigo-700  ring-1 ring-indigo-200; }
+  .badge-yellow { @apply badge bg-amber-50    text-amber-700   ring-1 ring-amber-200; }
+  .badge-gray   { @apply badge bg-surface-100 text-surface-600 ring-1 ring-surface-300; }
+
+  /* ─── Stat card ──────────────────────────────────────────────── */
+  .stat-card  { @apply card p-5 flex flex-col gap-1; }
+  .stat-label { @apply text-xs font-semibold text-surface-400 uppercase tracking-wider; }
+  .stat-value { @apply text-2xl font-bold text-surface-900; }
+
+  /* ─── Modal ──────────────────────────────────────────────────── */
+  .modal-overlay {
+    @apply fixed inset-0 z-50 flex items-center justify-center p-4
+           bg-black/30 backdrop-blur-[2px];
+    animation: fadeIn 0.15s ease-out;
+  }
+  .modal-box {
+    @apply bg-white rounded-2xl shadow-modal w-full max-h-[90vh] overflow-y-auto
+           border border-surface-200;
+    animation: slideUp 0.2s ease-out;
+  }
+  .modal-header {
+    @apply flex items-center justify-between px-6 py-4 border-b border-surface-100;
+  }
+  .modal-body   { @apply px-6 py-5; }
+  .modal-footer {
+    @apply flex justify-end gap-3 px-6 py-4 border-t border-surface-100;
+  }
+
+  /* ─── Divider ────────────────────────────────────────────────── */
+  .divider {
+    @apply flex items-center gap-3 text-xs text-surface-400;
+  }
+  .divider::before,
+  .divider::after {
+    content: '';
+    @apply flex-1 h-px bg-surface-200;
+  }
+}
+
+/* ─── Custom scrollbar ───────────────────────────────────────── */
+::-webkit-scrollbar       { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d4d4d4; border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: #a3a3a3; }
+
+/* ─── Spinner ────────────────────────────────────────────────── */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner {
+  border: 2px solid #e5e5e5;
+  border-top-color: #404040;
+  border-radius: 50%;
+  animation: spin 0.65s linear infinite;
+}
+
+/* ─── Page transition ────────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+@keyframes tabEnter {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.page-enter {
+  animation: pageEnter 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.tab-enter {
+  animation: tabEnter 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ─── Sidebar nav link transition ───────────────────────────── */
+.nav-link {
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+.nav-link:active {
+  transform: scale(0.97);
+}
+
+/* ─── Table row hover ────────────────────────────────────────── */
+.table tbody tr {
+  transition: background-color 0.1s ease;
+}
+
+/* ─── Focus ring smooth ──────────────────────────────────────── */
+*:focus-visible {
+  transition: box-shadow 0.15s ease;
+}
