@@ -1,3 +1,5 @@
+deployed app = [improject-hope-sms.netlify.app](https://improject-hope-sms.netlify.app/)
+
 # Hope SMS — Sales Management System
 
 > **BS Information Technology Capstone · New Era University · AY 2025–2026**
