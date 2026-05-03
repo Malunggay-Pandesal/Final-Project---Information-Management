@@ -265,7 +265,7 @@
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #d4d4d4; border-radius: 999px; }
 ::-webkit-scrollbar-thumb:hover { background: #a3a3a3; }
-
+/*UUI
 /* ─── Sidebar nav links ──────────────────────────────────────── */
 .nav-link {
   transition: background-color 0.15s ease,
