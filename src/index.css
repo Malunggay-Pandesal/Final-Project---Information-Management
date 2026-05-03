@@ -25,58 +25,129 @@
   /* ─── Buttons ──────────────────────────────────────────────── */
   .btn {
     @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm
-           transition-all duration-200 focus-visible:outline-none focus-visible:ring-2
-           focus-visible:ring-offset-1 disabled:opacity-40 disabled:cursor-not-allowed
-           select-none whitespace-nowrap active:scale-[0.97];
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1
+           disabled:opacity-40 disabled:cursor-not-allowed
+           select-none whitespace-nowrap;
+    /* Smooth spring-like transition on all properties */
+    transition: background-color 0.18s ease,
+                color            0.18s ease,
+                border-color     0.18s ease,
+                box-shadow       0.18s ease,
+                transform        0.12s cubic-bezier(0.34, 1.56, 0.64, 1),
+                opacity          0.18s ease;
   }
+
+  /* Press effect — scales down slightly then springs back */
+  .btn:active:not(:disabled) {
+    transform: scale(0.95);
+    transition: transform 0.08s cubic-bezier(0.34, 1, 0.64, 1);
+  }
+
   .btn-primary {
-    @apply btn bg-surface-900 text-white hover:bg-surface-700
-           focus-visible:ring-surface-700;
+    @apply btn bg-surface-900 text-white focus-visible:ring-surface-700;
+    box-shadow: 0 1px 2px rgb(0 0 0 / .15);
   }
+  .btn-primary:hover:not(:disabled) {
+    @apply bg-surface-700;
+    box-shadow: 0 4px 12px rgb(0 0 0 / .2), 0 1px 3px rgb(0 0 0 / .1);
+    transform: translateY(-1px);
+  }
+  .btn-primary:active:not(:disabled) {
+    @apply bg-surface-800;
+    box-shadow: 0 1px 3px rgb(0 0 0 / .12);
+    transform: scale(0.96) translateY(0);
+  }
+
   .btn-secondary {
     @apply btn bg-white text-surface-700 border border-surface-300
-           hover:bg-surface-50 hover:border-surface-400
            focus-visible:ring-surface-400;
+    box-shadow: 0 1px 2px rgb(0 0 0 / .05);
   }
+  .btn-secondary:hover:not(:disabled) {
+    @apply bg-surface-50 border-surface-400;
+    box-shadow: 0 3px 8px rgb(0 0 0 / .08);
+    transform: translateY(-1px);
+  }
+  .btn-secondary:active:not(:disabled) {
+    @apply bg-surface-100;
+    box-shadow: 0 1px 2px rgb(0 0 0 / .05);
+    transform: scale(0.96) translateY(0);
+  }
+
   .btn-danger {
-    @apply btn bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500;
+    @apply btn bg-red-600 text-white focus-visible:ring-red-500;
+    box-shadow: 0 1px 2px rgb(220 38 38 / .2);
   }
+  .btn-danger:hover:not(:disabled) {
+    @apply bg-red-700;
+    box-shadow: 0 4px 12px rgb(220 38 38 / .3);
+    transform: translateY(-1px);
+  }
+  .btn-danger:active:not(:disabled) {
+    transform: scale(0.96) translateY(0);
+  }
+
   .btn-ghost {
-    @apply btn text-surface-500 hover:bg-surface-200 hover:text-surface-800
-           focus-visible:ring-surface-400;
+    @apply btn text-surface-500 focus-visible:ring-surface-400;
   }
+  .btn-ghost:hover:not(:disabled) {
+    @apply bg-surface-200 text-surface-800;
+    transform: translateY(-1px);
+  }
+  .btn-ghost:active:not(:disabled) {
+    @apply bg-surface-300;
+    transform: scale(0.96) translateY(0);
+  }
+
   .btn-success {
-    @apply btn bg-emerald-600 text-white hover:bg-emerald-700
-           focus-visible:ring-emerald-500;
+    @apply btn bg-emerald-600 text-white focus-visible:ring-emerald-500;
+    box-shadow: 0 1px 2px rgb(5 150 105 / .2);
   }
+  .btn-success:hover:not(:disabled) {
+    @apply bg-emerald-700;
+    box-shadow: 0 4px 12px rgb(5 150 105 / .3);
+    transform: translateY(-1px);
+  }
+  .btn-success:active:not(:disabled) {
+    transform: scale(0.96) translateY(0);
+  }
+
   .btn-sm   { @apply px-3 py-1.5 text-xs; }
   .btn-icon { @apply btn p-2; }
 
   /* ─── Cards ────────────────────────────────────────────────── */
   .card {
-    @apply bg-white rounded-xl shadow-card border border-surface-200;
+    @apply bg-white rounded-xl border border-surface-200;
+    box-shadow: 0 1px 2px rgb(0 0 0 / .05);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
   }
-  .card-header {
-    @apply px-6 py-4 border-b border-surface-100;
-  }
-  .card-body {
-    @apply px-6 py-4;
-  }
+  .card-header { @apply px-6 py-4 border-b border-surface-100; }
+  .card-body   { @apply px-6 py-4; }
 
   /* ─── Forms ─────────────────────────────────────────────────── */
   .input {
     @apply block w-full rounded-lg border border-surface-300 bg-white px-3 py-2.5
            text-sm text-surface-800 placeholder-surface-400
-           focus:outline-none focus:ring-2 focus:ring-surface-800 focus:border-transparent
-           disabled:bg-surface-100 disabled:text-surface-400 disabled:cursor-not-allowed
-           transition-all duration-200;
+           disabled:bg-surface-100 disabled:text-surface-400 disabled:cursor-not-allowed;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    outline: none;
+  }
+  .input:focus {
+    border-color: transparent;
+    box-shadow: 0 0 0 2px #171717;
+  }
+  .input:hover:not(:focus):not(:disabled) {
+    border-color: #a3a3a3;
   }
   .label {
     @apply block text-xs font-semibold text-surface-600 mb-1.5 uppercase tracking-wide;
   }
   .form-group  { @apply space-y-0; }
-  .input-error { @apply border-red-400 focus:ring-red-500; }
-  .error-msg   { @apply text-xs text-red-500 mt-1.5; }
+  .input-error {
+    border-color: #f87171 !important;
+    box-shadow: 0 0 0 2px rgb(248 113 113 / .3) !important;
+  }
+  .error-msg { @apply text-xs text-red-500 mt-1.5; }
 
   /* ─── Table ─────────────────────────────────────────────────── */
   .table-wrapper {
@@ -88,14 +159,17 @@
            tracking-wider bg-surface-50 border-b border-surface-200;
   }
   .table tbody tr {
-    @apply border-b border-surface-100 last:border-0
-           hover:bg-surface-50 transition-colors duration-150;
+    @apply border-b border-surface-100 last:border-0;
+    transition: background-color 0.12s ease;
+    cursor: default;
   }
+  .table tbody tr:hover { @apply bg-surface-50; }
   .table tbody td { @apply px-4 py-3 text-surface-700; }
 
   /* ─── Badge ─────────────────────────────────────────────────── */
   .badge {
     @apply inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold;
+    transition: transform 0.1s ease;
   }
   .badge-green  { @apply badge bg-emerald-50  text-emerald-700 ring-1 ring-emerald-200; }
   .badge-red    { @apply badge bg-red-50      text-red-600     ring-1 ring-red-200; }
@@ -110,14 +184,14 @@
 
   /* ─── Modal ──────────────────────────────────────────────────── */
   .modal-overlay {
-    @apply fixed inset-0 z-50 flex items-center justify-center p-4
-           bg-black/30 backdrop-blur-[2px];
-    animation: fadeIn 0.15s ease-out;
+    @apply fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30;
+    backdrop-filter: blur(3px);
+    animation: overlayIn 0.18s ease-out both;
   }
   .modal-box {
-    @apply bg-white rounded-2xl shadow-modal w-full max-h-[90vh] overflow-y-auto
-           border border-surface-200;
-    animation: slideUp 0.2s ease-out;
+    @apply bg-white rounded-2xl w-full max-h-[90vh] overflow-y-auto border border-surface-200;
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / .2), 0 0 0 1px rgb(0 0 0 / .04);
+    animation: modalSlideUp 0.22s cubic-bezier(0.34, 1.4, 0.64, 1) both;
   }
   .modal-header {
     @apply flex items-center justify-between px-6 py-4 border-b border-surface-100;
@@ -128,45 +202,36 @@
   }
 
   /* ─── Divider ────────────────────────────────────────────────── */
-  .divider {
-    @apply flex items-center gap-3 text-xs text-surface-400;
-  }
-  .divider::before,
-  .divider::after {
+  .divider { @apply flex items-center gap-3 text-xs text-surface-400; }
+  .divider::before, .divider::after {
     content: '';
     @apply flex-1 h-px bg-surface-200;
   }
 }
 
-/* ─── Custom scrollbar ───────────────────────────────────────── */
-::-webkit-scrollbar       { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #d4d4d4; border-radius: 999px; }
-::-webkit-scrollbar-thumb:hover { background: #a3a3a3; }
-
-/* ─── Spinner ────────────────────────────────────────────────── */
-@keyframes spin { to { transform: rotate(360deg); } }
-.spinner {
-  border: 2px solid #e5e5e5;
-  border-top-color: #404040;
-  border-radius: 50%;
-  animation: spin 0.65s linear infinite;
+/* ─── Keyframes ──────────────────────────────────────────────── */
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
-/* ─── Page transition ────────────────────────────────────────── */
-@keyframes fadeIn {
+@keyframes overlayIn {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
 
+@keyframes modalSlideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
 @keyframes pageEnter {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(16px) scale(0.98); }
-  to   { opacity: 1; transform: translateY(0)    scale(1); }
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 @keyframes tabEnter {
@@ -174,28 +239,48 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
-.page-enter {
-  animation: pageEnter 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+@keyframes ripple {
+  from { transform: scale(0); opacity: 0.4; }
+  to   { transform: scale(2.5); opacity: 0; }
 }
 
+/* ─── Utility animation classes ──────────────────────────────── */
+.page-enter {
+  animation: pageEnter 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
 .tab-enter {
   animation: tabEnter 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* ─── Sidebar nav link transition ───────────────────────────── */
+/* ─── Spinner ────────────────────────────────────────────────── */
+.spinner {
+  border: 2px solid #e5e5e5;
+  border-top-color: #404040;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+/* ─── Custom scrollbar ───────────────────────────────────────── */
+::-webkit-scrollbar       { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d4d4d4; border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: #a3a3a3; }
+/*UUI
+/* ─── Sidebar nav links ──────────────────────────────────────── */
 .nav-link {
-  transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+  transition: background-color 0.15s ease,
+              color            0.15s ease,
+              transform        0.1s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow       0.15s ease;
 }
-.nav-link:active {
-  transform: scale(0.97);
-}
+.nav-link:active { transform: scale(0.96); }
 
-/* ─── Table row hover ────────────────────────────────────────── */
-.table tbody tr {
-  transition: background-color 0.1s ease;
-}
-
-/* ─── Focus ring smooth ──────────────────────────────────────── */
+/* ─── Smooth focus rings ─────────────────────────────────────── */
 *:focus-visible {
-  transition: box-shadow 0.15s ease;
+  transition: box-shadow 0.12s ease;
+}
+
+/* ─── Link transitions ───────────────────────────────────────── */
+a {
+  transition: color 0.15s ease, opacity 0.15s ease;
 }
