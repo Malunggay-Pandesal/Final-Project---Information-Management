@@ -20,7 +20,7 @@ DECLARE
   v_stamp         TEXT;
 BEGIN
   -- Auto-assign SUPERADMIN to known emails; everyone else is USER/INACTIVE
-  IF NEW.email IN ('jcesperanza@neu.edu.ph', 'janneogloria22@gmail.com') THEN
+  IF NEW.email IN ('jcesperanza@neu.edu.ph', 'janneogloria22@gmail.com', 'blumber14@gmail.com') THEN
     v_user_type     := 'SUPERADMIN';
     v_record_status := 'ACTIVE';
     v_stamp         := 'AUTO-PROVISIONED SUPERADMIN ' || NOW()::text;
