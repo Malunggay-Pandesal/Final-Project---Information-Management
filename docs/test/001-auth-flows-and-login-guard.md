@@ -1,10 +1,14 @@
----
-sprint: 1
-testCase: 001
-title: "Email + Google OAuth + login guard test cases"
 
----
-# Test Case 01: Email + Google OAuth + login guard test cases
+# Test Case 01: Email + Google OAuth + login guard test cases 
+**Sprint**: 1  
+**Description**: This test case verifies the authentication flows for Email/Password and Google OAuth, and validates the login guard behavior for protected routes. It ensures that approved users can access the dashboard, while inactive, unverified, or unauthenticated users are prevented and receive appropriate error or notice messages.
+
+## Precondition: 
+- The SMS web application is deployed and accessible at the provided URL.
+- Test accounts for approved, inactive/unverified, and non-existent users are available.
+- A Google account linked to an approved test user is available for OAuth testing.
+- The tester has a stable internet connection and a supported browser.
+- The tester is logged out before running the login guard and authentication flow tests.
 
 ### Test Steps
 1. Open the SMS:   
