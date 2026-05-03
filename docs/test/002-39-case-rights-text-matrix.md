@@ -23,17 +23,17 @@ https://improject-hope-sms.netlify.app/
 > ❌: Fail  
 > ? : confirming...
 
-| Rights                    | Superadmin | Admin | User               |
-|---------------------------|------------|-------|--------------------|
-| View Sales Transactions   |            |       | ✅ (Allowed)        |
-| Add new Sales Transaction |            |       | ?                  |
-| Edit Sales Transaction    |            |       | ?                  |
-| Delete Sales Transactions |            |       | ✅ (Hidden/Blocked) |
-| Add Sales Details         |            |       | ?                  |
-| Edit Sales Details        |            |       | ?                  |
-| Delete Sales Details      |            |       | ✅ (Hidden/Blocked) |
-| Customer Lookup           |            |       | ✅ (Allowed)        |
-| Employee Lookup           |            |       | ✅ (Allowed)        |
-| Products lookup           |            |       | ✅ (Allowed)        |
-| Price lookup              |            |       | ✅ (Allowed)        |
-| Manage User accounts      |            |       | ✅ (Hidden/Blocked) |
+| Rights                    | Superadmin  | Admin | User               |
+|---------------------------|-------------|-------|--------------------|
+| View Sales Transactions   | ✅ (Allowed) |       | ✅ (Allowed)        |
+| Add new Sales Transaction | ✅ (Allowed) |       | ?                  |
+| Edit Sales Transaction    | ?           |       | ?                  |
+| Delete Sales Transactions | ?           |       | ✅ (Hidden/Blocked) |
+| Add Sales Details         | ?           |       | ?                  |
+| Edit Sales Details        | ?           |       | ?                  |
+| Delete Sales Details      | ?           |       | ✅ (Hidden/Blocked) |
+| Customer Lookup           | ✅ (Allowed) |       | ✅ (Allowed)        |
+| Employee Lookup           | ✅ (Allowed) |       | ✅ (Allowed)        |
+| Products lookup           | ✅ (Allowed) |       | ✅ (Allowed)        |
+| Price lookup              | ✅ (Allowed) |       | ✅ (Allowed)        |
+| Manage User accounts      | ✅ (Allowed) |       | ✅ (Hidden/Blocked) |
