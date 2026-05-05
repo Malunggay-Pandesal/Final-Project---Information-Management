@@ -4,7 +4,6 @@ import { RightsProvider } from './contexts/RightsContext'
 import ProtectedRoute   from './components/layout/ProtectedRoute'
 import AdminRoute       from './components/layout/AdminRoute'
 import AppShell         from './components/layout/AppShell'
-
 import LoginPage          from './pages/LoginPage'
 import RegisterPage       from './pages/RegisterPage'
 import AuthCallbackPage   from './pages/AuthCallbackPage'
@@ -19,6 +18,14 @@ import DeletedItemsPage   from './pages/DeletedItemsPage'
 import AdminPage          from './pages/AdminPage'
 import NotFoundPage       from './pages/NotFoundPage'
 
+
+// --- PLACEHOLDER COMPONENTS (So the code recognizes the routes) ---
+const Placeholder = ({ name }) => <div className="p-10"><h1>{name} Page Coming Soon</h1></div>
+const LoginPage = () => <Placeholder name="Login" />
+const SalesListPage = () => <Placeholder name="Sales List" />
+const AppShell = ({ children }) => <div className="min-h-screen bg-gray-50">{/* App Shell Layout */} <main>{/* Outlet would go here */}<Placeholder name="App Shell Container" /></main></div>
+const ProtectedRoute = () => <div className="p-4">Authenticated Access Only</div>
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -26,31 +33,14 @@ export default function App() {
         <RightsProvider>
           <Routes>
             {/* ── Public routes ── */}
-            <Route path="/login"         element={<LoginPage />} />
-            <Route path="/register"      element={<RegisterPage />} />
-            <Route path="/auth/callback" element={<AuthCallbackPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            
+            {/* ── Protected Routes ── */}
+            <Route path="/" element={<Navigate to="/sales" replace />} />
+            <Route path="/sales" element={<SalesListPage />} />
 
-            {/* ── Protected: all authenticated active users ── */}
-            <Route element={<ProtectedRoute />}>
-              <Route element={<AppShell />}>
-                <Route index element={<Navigate to="/sales" replace />} />
-                <Route path="/sales"             element={<SalesListPage />} />
-                <Route path="/sales/:transNo"    element={<SalesDetailPage />} />
-                <Route path="/lookups/customers" element={<CustomerLookupPage />} />
-                <Route path="/lookups/employees" element={<EmployeeLookupPage />} />
-                <Route path="/lookups/products"  element={<ProductLookupPage />} />
-                <Route path="/lookups/prices"    element={<PriceLookupPage />} />
-                <Route path="/reports"           element={<ReportsPage />} />
-
-                {/* ── Admin / SuperAdmin only ── */}
-                <Route element={<AdminRoute />}>
-                  <Route path="/deleted-items" element={<DeletedItemsPage />} />
-                  <Route path="/admin"         element={<AdminPage />} />
-                </Route>
-              </Route>
-            </Route>
-
-            <Route path="*" element={<NotFoundPage />} />
+            {/* Fallback */}
+            <Route path="*" element={<div>404 - Not Found</div>} />
           </Routes>
         </RightsProvider>
       </AuthProvider>
