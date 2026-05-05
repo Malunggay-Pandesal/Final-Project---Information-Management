@@ -102,7 +102,7 @@ export default function LoginPage() {
               <label className="label" htmlFor="password">Password</label>
               <input
                 id="password" type="password" className="input"
-                placeholder="••••••••"
+                placeholder="•••••••"
                 value={password} onChange={e => setPassword(e.target.value)}
                 required autoComplete="current-password"
               />
