@@ -3,7 +3,7 @@
 -- Run this AFTER importing the base HopeDB tables.
 -- ============================================================
 
--- Add columns to sales
+-- add columns to sales
 ALTER TABLE sales
   ADD COLUMN IF NOT EXISTS record_status VARCHAR(10) DEFAULT 'ACTIVE'
     CHECK (record_status IN ('ACTIVE', 'INACTIVE')),
