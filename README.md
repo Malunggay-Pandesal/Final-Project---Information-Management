@@ -1,86 +1,39 @@
-deployed app = [improject-hope-sms.netlify.app](https://improject-hope-sms.netlify.app/)
-
 # Hope SMS — Sales Management System
 
-> **BS Information Technology Capstone · New Era University · AY 2025–2026**
-> Developed for Hope, Inc. | 6-Week Sprint-Based Project
+[Live demo](https://improject-hope-sms.netlify.app/)
 
----
+> BS Information Technology Capstone · New Era University · AY 2025–2026
+> Developed for Hope, Inc. as a 6-week sprint project
 
-## 📋 Project Overview
+Hope SMS is a full-stack sales management app for Hope, Inc. It supports sales and line-item tracking, role-based access control, reporting, and Supabase-backed authentication.
 
-Hope SMS is a full-stack web application for managing sales transactions and line items from the HopeDB database. It features:
+## Highlights
 
-- Full CRUD on **sales** and **salesDetail** (soft-delete only — no hard deletes ever)
-- Read-only lookup of **customer**, **employee**, **product**, and **priceHist**
-- **Role-based access control** with 3 user types and 13 granular rights
-- **4 analytical reports** with charts (by employee, by customer, top products, monthly trend)
-- **Admin panel** for activating/deactivating user accounts
-- **Deleted Items panel** for recovering soft-deleted records
-- Email/password + **Google OAuth** authentication via Supabase Auth
+- Full CRUD for `sales` and `salesDetail` with soft-delete only
+- Read-only lookup views for customers, employees, products, and price history
+- Role-based access control for 3 user types and 13 granular rights
+- 4 analytical reports with charts: by employee, by customer, top products, and monthly trend
+- Admin tools for user activation and deactivation
+- Deleted-items recovery for soft-deleted records
+- Email/password and Google OAuth sign-in through Supabase Auth
 
----
-
-## 🏗️ Technology Stack
+## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
 | Frontend | React 18 + Vite |
 | Styling | Tailwind CSS |
-| Backend / DB | Supabase (PostgreSQL) |
-| Auth | Supabase Auth (Email + Google OAuth) |
+| Backend / Database | Supabase (PostgreSQL) |
+| Authentication | Supabase Auth |
 | State | React Context API |
 | Charts | Recharts |
 | Testing | Vitest + React Testing Library |
-| Version Control | Git + GitHub |
 | Deployment | Vercel |
 
----
+## Project Structure
 
-## 📁 Project Structure
-
-```
-hope-sms/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── components/
-│   │   ├── layout/         # AppShell, Sidebar, Navbar, ProtectedRoute, AdminRoute
-│   │   └── ui/             # Modal, Spinner, AlertBanner, EmptyState
-│   ├── contexts/
-│   │   ├── AuthContext.jsx      # Supabase auth + login guard
-│   │   └── RightsContext.jsx    # 13-right map loaded at login
-│   ├── lib/
-│   │   └── supabase.js          # Supabase client (reads .env)
-│   ├── pages/
-│   │   ├── LoginPage.jsx
-│   │   ├── RegisterPage.jsx
-│   │   ├── AuthCallbackPage.jsx
-│   │   ├── SalesListPage.jsx
-│   │   ├── SalesDetailPage.jsx
-│   │   ├── CustomerLookupPage.jsx
-│   │   ├── EmployeeLookupPage.jsx
-│   │   ├── ProductLookupPage.jsx
-│   │   ├── PriceLookupPage.jsx
-│   │   ├── ReportsPage.jsx
-│   │   ├── DeletedItemsPage.jsx
-│   │   ├── AdminPage.jsx
-│   │   └── NotFoundPage.jsx
-│   ├── services/
-│   │   ├── salesService.js
-│   │   ├── salesDetailService.js
-│   │   ├── lookupService.js
-│   │   ├── reportService.js
-│   │   └── adminService.js
-│   ├── test/
-│   │   ├── setup.js
-│   │   ├── rights.test.js     # 39-case rights matrix
-│   │   └── format.test.js
-│   ├── utils/
-│   │   └── format.js
-│   ├── App.jsx
-│   ├── main.jsx
-│   └── index.css
+```text
+.
 ├── db/
 │   └── migrations/
 │       ├── 01_add_status_stamp.sql
@@ -91,239 +44,144 @@ hope-sms/
 │       ├── 06_cascade_trigger.sql
 │       ├── 07_rls_policies.sql
 │       └── 08_views.sql
-├── .env.example
-├── .gitignore
+├── docs/
+│   └── test/
+├── public/
+├── src/
+│   ├── components/
+│   ├── contexts/
+│   ├── lib/
+│   ├── pages/
+│   ├── services/
+│   ├── test/
+│   └── utils/
+├── index.html
 ├── package.json
-├── vite.config.js
 ├── tailwind.config.js
+├── vite.config.js
 └── README.md
 ```
 
----
-
-## ⚙️ Local Setup (Step-by-Step)
+## Local Setup
 
 ### Prerequisites
-- Node.js ≥ 18
-- A Supabase project (free tier is fine)
+
+- Node.js 18 or newer
+- A Supabase project
 - Git
 
-### Step 1 — Clone the repository
-
-```bash
-git clone https://github.com/YOUR_USERNAME/hope-sms.git
-cd hope-sms
-```
-
-### Step 2 — Install dependencies
+### 1. Install dependencies
 
 ```bash
 npm install
 ```
 
-### Step 3 — Configure environment variables
+### 2. Set environment variables
 
-```bash
-cp .env.example .env
-```
+Create a local `.env` file and define:
 
-Open `.env` and fill in your Supabase credentials:
-
-```
+```env
 VITE_SUPABASE_URL=https://your-project-id.supabase.co
 VITE_SUPABASE_ANON_KEY=your-anon-key-here
 ```
 
-> ⚠️ **Never commit `.env` to Git.** It is already listed in `.gitignore`.
+Vite exposes `VITE_` variables to the browser, so keep secrets out of this file.
 
-### Step 4 — Set up the Supabase database
+### 3. Run the database migrations
 
-In your Supabase project, go to **SQL Editor** and run the migration files **in order**:
+Open your Supabase project, go to SQL Editor, and run the migration files in order:
 
-| # | File | What it does |
-|---|------|-------------|
-| 01 | `01_add_status_stamp.sql` | Adds `record_status` + `stamp` to sales & salesDetail |
-| 02 | `02_auth_tables.sql` | Creates user, Module, rights, UserModule_Rights tables |
-| 03 | `03_seed_modules_rights.sql` | Seeds 4 modules and 13 rights |
-| 04 | `04_seed_superadmin.sql` | Seeds SUPERADMIN (replace UID placeholder first) |
-| 05 | `05_provision_trigger.sql` | Auto-provisions new users as USER/INACTIVE |
-| 06 | `06_cascade_trigger.sql` | Cascade soft-delete / recovery trigger |
-| 07 | `07_rls_policies.sql` | All Row Level Security policies |
-| 08 | `08_views.sql` | 6 SQL views for list pages + reports |
+| # | File | Purpose |
+|---|------|---------|
+| 01 | `01_add_status_stamp.sql` | Adds `record_status` and `stamp` to sales tables |
+| 02 | `02_auth_tables.sql` | Creates auth and rights tables |
+| 03 | `03_seed_modules_rights.sql` | Seeds modules and rights |
+| 04 | `04_seed_superadmin.sql` | Seeds the SUPERADMIN account |
+| 05 | `05_provision_trigger.sql` | Auto-provisions new users |
+| 06 | `06_cascade_trigger.sql` | Cascades soft-delete and recovery states |
+| 07 | `07_rls_policies.sql` | Applies Row Level Security policies |
+| 08 | `08_views.sql` | Creates SQL views for list pages and reports |
 
-> **Before running Migration 04:** Go to Supabase **Authentication → Users**, create the SUPERADMIN account with email `jcesperanza@neu.edu.ph`, then copy the UUID from that user and replace `SUPABASE_AUTH_UID_HERE` in `04_seed_superadmin.sql`.
+Before running migration 04, create the SUPERADMIN user in Supabase Authentication, then replace `SUPABASE_AUTH_UID_HERE` in `04_seed_superadmin.sql` with that user’s UUID.
 
-### Step 5 — Start the dev server
+### 4. Start the app
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173)
+Open [http://localhost:5173](http://localhost:5173).
 
----
+## Supabase and OAuth
 
-## 🔗 Supabase Connection Guide
+The Supabase client is configured in `src/lib/supabase.js` and reads the two environment variables above.
 
-### Connecting to Supabase
+To enable Google OAuth:
 
-The Supabase client is initialized in `src/lib/supabase.js`:
+1. Create an OAuth 2.0 Client ID in Google Cloud Console.
+2. Add redirect URIs for local and production callback routes.
+3. Paste the Client ID and Client Secret into Supabase under Authentication → Providers → Google.
 
-```js
-import { createClient } from '@supabase/supabase-js'
+Suggested redirect URIs:
 
-export const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY
-)
-```
+- `http://localhost:5173/auth/callback`
+- `https://your-app.vercel.app/auth/callback`
 
-Vite exposes any variable prefixed with `VITE_` from your `.env` file to the browser.
+## Scripts
 
-### Testing the connection
+| Command | Purpose |
+|---------|---------|
+| `npm run dev` | Start the Vite dev server |
+| `npm run build` | Build the app for production |
+| `npm run preview` | Preview the production build locally |
+| `npm run test` | Run Vitest in watch mode |
+| `npm run test:run` | Run tests once |
+| `npm run test:ui` | Open the Vitest UI |
+| `npm run lint` | Run ESLint |
 
-In the Supabase SQL Editor, run:
+## Testing
 
-```sql
-SELECT COUNT(*) FROM public.sales;
-SELECT COUNT(*) FROM public.customer;
-```
+The test suite covers rights logic and utility formatting behavior.
 
-Both should return row counts from your seeded data.
+- 39-case rights matrix for all user types and permission combinations
+- Formatting helpers for currency, date, and transaction numbers
+- Business rules around soft-delete gating and lookup-only enforcement
 
-### Setting up Google OAuth
+## Deployment
 
-1. Go to [Google Cloud Console](https://console.cloud.google.com) → APIs & Services → Credentials
-2. Create an **OAuth 2.0 Client ID** (Web application type)
-3. Add authorized redirect URIs:
-   - `http://localhost:5173/auth/callback` (development)
-   - `https://your-app.vercel.app/auth/callback` (production)
-4. Copy the **Client ID** and **Client Secret**
-5. In Supabase: **Authentication → Providers → Google** → paste credentials → Enable
+The app is deployed to Vercel.
 
----
+1. Push the repository to GitHub.
+2. Import the repo into Vercel.
+3. Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in Vercel environment settings.
+4. Deploy the project.
+5. Add the production callback URL to Supabase Authentication URL configuration.
 
-## 🚀 Deployment to Vercel
+## Core Rules
 
-### Step 1 — Push to GitHub
+- No hard deletes; records are soft-deleted only.
+- Soft-deleting a sales header cascades to related `salesDetail` rows.
+- Lookup tables are read-only for all users.
+- `INACTIVE` records stay hidden from regular users.
+- SUPERADMIN rows are protected from admin-level activation and deactivation.
+- Stamp fields are hidden from regular users in the UI.
 
-```bash
-git init
-git add .
-git commit -m "feat: initial project scaffold"
-git remote add origin https://github.com/YOUR_USERNAME/hope-sms.git
-git push -u origin main
-```
+## Git Workflow
 
-### Step 2 — Import project in Vercel
+| Branch | Purpose |
+|--------|---------|
+| `main` | Production-ready code |
+| `dev` | Stable integration branch |
+| `feature/*` | Individual features |
 
-1. Go to [vercel.com](https://vercel.com) → **Add New Project**
-2. Import your GitHub repository
-3. Vercel will auto-detect Vite — keep default settings
-
-### Step 3 — Set environment variables in Vercel
-
-In Vercel project settings → **Environment Variables**, add:
-
-| Name | Value |
-|------|-------|
-| `VITE_SUPABASE_URL` | `https://your-project-id.supabase.co` |
-| `VITE_SUPABASE_ANON_KEY` | `your-anon-key` |
-
-### Step 4 — Deploy
-
-Click **Deploy**. Vercel builds and publishes your app. Your live URL will be something like `https://hope-sms.vercel.app`.
-
-### Step 5 — Update Supabase redirect URLs
-
-In Supabase: **Authentication → URL Configuration** → add your Vercel URL:
-- Site URL: `https://hope-sms.vercel.app`
-- Redirect URLs: `https://hope-sms.vercel.app/auth/callback`
-
----
-
-## 🌿 Git Workflow
-
-```
-main          ← production only (release PRs merge here)
-dev           ← stable base; all feature branches fork from here
-feature/*     ← individual features
-```
-
-### Branch naming
-
-| Prefix | Use |
-|--------|-----|
-| `feat/` | New feature |
-| `fix/` | Bug fix |
-| `db/` | Database changes |
-| `test/` | Test files |
-| `docs/` | Documentation |
-| `chore/` | Config/tooling |
-
-### Example commit messages
-
-```bash
-git commit -m "feat: add soft-delete with cascade for sales transactions"
-git commit -m "fix: price auto-fill not triggering on product change"
-git commit -m "db: add cascade trigger for salesDetail recovery"
-git commit -m "test: add 39-case rights matrix test suite"
-```
-
----
-
-## 🔑 User Types & Rights
-
-| Right | SUPERADMIN | ADMIN | USER |
-|-------|:---:|:---:|:---:|
-| SALES_VIEW | ✅ | ✅ | ✅ |
-| SALES_ADD | ✅ | ✅ | ❌ |
-| SALES_EDIT | ✅ | ✅ | ❌ |
-| SALES_DEL (soft) | ✅ | ❌ | ❌ |
-| SD_VIEW | ✅ | ✅ | ✅ |
-| SD_ADD | ✅ | ✅ | ❌ |
-| SD_EDIT | ✅ | ✅ | ❌ |
-| SD_DEL (soft) | ✅ | ❌ | ❌ |
-| All 4 LOOKUPs | ✅ | ✅ | ✅ |
-| ADM_USER | ✅ | ✅ | ❌ |
-
----
-
-## 🧪 Running Tests
-
-```bash
-npm run test        # watch mode
-npm run test:run    # single run (for CI)
-```
-
-The test suite includes:
-- **39-case rights matrix** — verifies all 3 user types × 13 rights
-- **Format utility tests** — currency, date, transNo generation
-- Business rule assertions (soft-delete gating, lookup-only enforcement)
-
----
-
-## 📌 Critical Rules Enforced
-
-1. **No hard deletes** — `DELETE` SQL never appears anywhere in the codebase
-2. **Soft-delete cascade** — setting `sales.record_status = INACTIVE` triggers all `salesDetail` rows to INACTIVE automatically via a DB trigger
-3. **Lookup tables are read-only** — customer, employee, product, priceHist have no add/edit/delete UI for any user type; RLS restricts them to SELECT only
-4. **INACTIVE records are invisible to USER** — enforced at both RLS (SELECT policy) and React query level
-5. **SUPERADMIN is protected** — ADMIN cannot activate/deactivate SUPERADMIN rows; enforced at UI, service, and RLS levels
-6. **Stamp hidden from USER** — stamp columns are only shown in the UI when user_type is ADMIN or SUPERADMIN
-
----
-
-## 👥 Team
+## Team
 
 | # | Role | Responsibilities |
 |---|------|----------------|
 | M1 | Project Lead / Full-Stack | Sprint coordination, API wiring, routing, deployment |
-| M2 | Frontend Developer | All React pages, UI/UX, responsive design |
+| M2 | Frontend Developer | React pages, UI/UX, responsive design |
 | M3 | DB Engineer | Schema, migrations, RLS policies, SQL views |
 | M4 | Rights & Auth Specialist | AuthContext, RightsContext, OAuth, login guard |
 | M5 | QA / Documentation | Test cases, user manual, sprint log, slides |
 
----
-
-*Hope, Inc. Sales Management System · New Era University CCS · AY 2025–2026*
+Hope, Inc. Sales Management System · New Era University CCS · AY 2025–2026
