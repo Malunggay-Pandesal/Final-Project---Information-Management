@@ -75,7 +75,7 @@ export function AuthProvider({ children }) {
       options: { data: { username } },
     })
   }
-
+  // Member 4: Handled Google OAuth logic
   const signInWithGoogle = () =>
     supabase.auth.signInWithOAuth({
       provider: 'google',
