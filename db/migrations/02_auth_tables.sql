@@ -1,6 +1,18 @@
 -- ============================================================
--- Migration 02: Auth / Rights tables
--- user, Module, user_module, rights, UserModule_Rights
+-- Migration 02: Authentication and Rights Management Tables
+-- Tables Included:
+--   1. user
+--   2. Module
+--   3. user_module
+--   4. rights
+--   5. UserModule_Rights
+-- Purpose:
+-- This migration creates the core authorization structure
+-- for user access, module permissions, and rights management.
+-- ============================================================
+-- ============================================================
+-- USER TABLE
+-- Stores system users authenticated via Supabase
 -- ============================================================
 
 CREATE TABLE IF NOT EXISTS public."user" (
