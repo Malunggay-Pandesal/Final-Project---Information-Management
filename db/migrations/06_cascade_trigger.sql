@@ -1,11 +1,46 @@
 -- ============================================================
--- Migration 06: Cascade soft-delete trigger
--- When sales.record_status changes ACTIVE → INACTIVE,
---   all salesDetail rows for that transNo become INACTIVE.
--- When sales.record_status changes INACTIVE → ACTIVE (recovery),
---   all salesDetail rows are restored to ACTIVE.
+-- Migration 06: Cascade Soft-Delete for Sales Details
+-- ============================================================
+-- Purpose:
+-- Automatically synchronizes the record_status of
+-- salesDetail rows whenever the parent sales record
+-- changes status.
+--
+-- Cascade Rules:
+--
+-- ACTIVE -> INACTIVE
+--   - All related salesDetail rows become INACTIVE
+--   - Used for soft-delete operations
+--
+-- INACTIVE -> ACTIVE
+--   - All related salesDetail rows become ACTIVE
+--   - Used for recovery / restore operations
+--
+-- Trigger:
+--   on_sales_status_change
+--   Fires AFTER UPDATE OF record_status on public.sales
+--
+-- Benefits:
+-- - Maintains parent-child data consistency
+-- - Prevents orphan active detail records
+-- - Supports reversible soft-delete workflow
+-- - Automatically restores child records on recovery
+--
+-- Notes:
+-- - Updates only rows sharing the same transNo
+-- - Adds audit stamps for delete/recovery actions
+-- - Safe to recreate using DROP TRIGGER IF EXISTS
 -- ============================================================
 
+
+-- ============================================================
+-- Function: cascade_sales_soft_delete
+-- ============================================================
+-- Handles automatic status propagation from:
+--   public.sales
+-- to:
+--   public."salesDetail"
+-- ============================================================
 CREATE OR REPLACE FUNCTION public.cascade_sales_soft_delete()
 RETURNS TRIGGER
 LANGUAGE plpgsql AS
