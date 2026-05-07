@@ -1,7 +1,9 @@
 -- ============================================================
 -- Migration 03: Seed Modules and Rights
--- ============================================================
-
+-- Description:
+-- Seeds default system modules and access rights.
+-- Safe to re-run because ON CONFLICT DO NOTHING is used.
+-- ===========================================================
 -- MODULES
 INSERT INTO public."Module" (moduleCode, moduleName, record_status, stamp)
 VALUES
