@@ -1,5 +1,8 @@
 -- ============================================================
 -- Migration 01: Add record_status and stamp to sales & salesDetail
+-- This migration adds:
+-- 1. record_status - identifies if a record is ACTIVE or INACTIVE
+-- 2. stamp -optional field for tracking/reference purposes
 -- Run this AFTER importing the base HopeDB tables.
 -- ============================================================
 
