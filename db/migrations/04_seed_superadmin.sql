@@ -1,8 +1,18 @@
 -- ============================================================
--- Migration 04: Seed SUPERADMIN account
--- Run AFTER creating the auth user in Supabase Dashboard.
--- Replace 'SUPABASE_AUTH_UID_HERE' with the actual auth.uid()
--- from Authentication > Users in your Supabase project.
+-- Migration 04: Seed SUPERADMIN Account
+--
+-- Description:
+-- Creates or updates the default SUPERADMIN user and
+-- automatically grants access to all modules and rights.
+--
+-- IMPORTANT:
+-- Before running this migration:
+-- 1. Create the authentication account manually in Supabase.
+-- 2. Copy the generated auth UID from:
+--    Supabase Dashboard > Authentication > Users
+-- 3. Replace 'SUPABASE_AUTH_UID_HERE' with the actual UID.
+--
+-- Safe to re-run because ON CONFLICT clauses are used.
 -- ============================================================
 
 -- Step 1: Insert the user row
