@@ -29,17 +29,17 @@ https://improject-hope-sms.netlify.app/
 > ❌: Fail  
 > ? : confirming...
 
-| Rights                    | Superadmin  | Admin | User               |
-|---------------------------|-------------|-------|--------------------|
-| View Sales Transactions   | ✅ (Allowed) |       | ✅ (Allowed)        |
-| Add new Sales Transaction | ✅ (Allowed) |       | ?                  |
-| Edit Sales Transaction    | ?           |       | ?                  |
-| Delete Sales Transactions | ?           |       | ✅ (Hidden/Blocked) |
-| Add Sales Details         | ?           |       | ?                  |
-| Edit Sales Details        | ?           |       | ?                  |
-| Delete Sales Details      | ?           |       | ✅ (Hidden/Blocked) |
-| Customer Lookup           | ✅ (Allowed) |       | ✅ (Allowed)        |
-| Employee Lookup           | ✅ (Allowed) |       | ✅ (Allowed)        |
-| Products lookup           | ✅ (Allowed) |       | ✅ (Allowed)        |
-| Price lookup              | ✅ (Allowed) |       | ✅ (Allowed)        |
-| Manage User accounts      | ✅ (Allowed) |       | ✅ (Hidden/Blocked) |
+| Rights                         | Superadmin  | Admin              | User               |
+|--------------------------------|-------------|--------------------|--------------------|
+| View Sales Transactions        | ✅ (Allowed) | ✅ (Allowed)        | ✅ (Allowed)        |
+| Add new Sales Transaction      | ✅ (Allowed) | ?                  | ✅ (Hidden/Blocked) |
+| Edit Sales Transaction         | ?           | ?                  | ✅ (Hidden/Blocked) |
+| Soft-Delete Sales Transactions | ?           | ✅ (Blocked)        | ✅ (Hidden/Blocked) |
+| Add Sales Details              | ?           | ?                  | ✅ (Hidden/Blocked) |
+| Edit Sales Details             | ?           | ?                  | ✅ (Hidden/Blocked) |
+| Soft-Delete Sales Details      | ?           | ✅ (Blocked)        | ✅ (Hidden/Blocked) |
+| Customer Lookup                | ✅ (Allowed) | ✅ (Allowed)        | ✅ (Allowed)        |
+| Employee Lookup                | ✅ (Allowed) | ✅ (Allowed)        | ✅ (Allowed)        |
+| Products lookup                | ✅ (Allowed) | ✅ (Allowed)        | ✅ (Allowed)        |
+| Price lookup                   | ✅ (Allowed) | ✅ (Allowed)        | ✅ (Allowed)        |
+| Manage User accounts           | ✅ (Allowed) | ✅ (Hidden/Blocked) | ✅ (Hidden/Blocked) |
