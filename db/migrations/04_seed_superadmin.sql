@@ -5,7 +5,7 @@
 -- from Authentication > Users in your Supabase project.
 -- ============================================================
 
--- Step 1: Insert the user row
+-- Step 1: Insert the User row
 INSERT INTO public."user" ("userId", username, user_type, record_status, stamp)
 VALUES (
   'SUPABASE_AUTH_UID_HERE',   -- replace with actual UID from Supabase Auth
