@@ -12,7 +12,7 @@ import Spinner     from '../components/ui/Spinner'
 import AlertBanner from '../components/ui/AlertBanner'
 import EmptyState  from '../components/ui/EmptyState'
 
-// ── Add / Edit form ──────────────────────────────────────────────────────────
+// ── Add / Edit Form ──────────────────────────────────────────────────────────
 function SaleForm({ initial, customers, employees, onSave, onCancel, saving }) {
   const [form, setForm] = useState({
     transNo:   initial?.transno   || '',
