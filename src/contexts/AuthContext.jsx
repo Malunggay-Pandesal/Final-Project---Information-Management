@@ -59,7 +59,7 @@ export function AuthProvider({ children }) {
         if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
           await resolveSession(session, setCurrentUser, setAuthError)
           setLoading(false)
-        } else if (event === 'SIGNED_OUT') {
+        } else if (event === 'SIGNED_OUT') { // else loop natin
           setCurrentUser(null)
           setLoading(false)
         }
@@ -68,7 +68,7 @@ export function AuthProvider({ children }) {
     return () => subscription.unsubscribe()
   }, [])
 
-  // Member 4: Auth Actions
+  // Member 4: Auth Actionss
   const signIn = (email, password) => {
     console.log("Attempting Sign In...");
     return supabase.auth.signInWithPassword({ email, password })
