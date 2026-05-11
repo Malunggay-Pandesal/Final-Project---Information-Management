@@ -3,7 +3,7 @@
 -- Run each CREATE OR REPLACE in Supabase SQL Editor.
 -- ============================================================
 
--- ── 1. Sales list view (with customer and employee names) ─────────────────────
+-- ── 1. sales list view (with customer and employee names) ─────────────────────
 DROP VIEW IF EXISTS public.sales_with_lookup;
 CREATE OR REPLACE VIEW public.sales_with_lookup AS
 SELECT
@@ -62,6 +62,7 @@ LEFT JOIN (
 DROP VIEW IF EXISTS public.sales_by_employee;
 CREATE OR REPLACE VIEW public.sales_by_employee AS
 SELECT
+
   e.empno,
   e.lastname || ', ' || e.firstname  AS empname,
   COUNT(DISTINCT s.transno)          AS totaltransactions,
