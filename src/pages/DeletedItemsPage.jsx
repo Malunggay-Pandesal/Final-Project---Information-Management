@@ -4,6 +4,13 @@
  * Allows recovery (set record_status = 'ACTIVE').
  * Route guard (AdminRoute) blocks USER accounts at the router level.
  */
+
+
+
+
+
+
+
 import { useEffect, useState, useCallback } from 'react'
 import { useAuth }   from '../contexts/AuthContext'
 import { getDeletedSales, recoverSale }        from '../services/salesService'
