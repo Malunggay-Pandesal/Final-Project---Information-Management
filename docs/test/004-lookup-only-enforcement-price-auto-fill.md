@@ -1,6 +1,6 @@
 
 # Test Case 04: Lookup-only enforcement + price auto-fill tests
-**Sprint**: 2
+**Sprint**: 2  
 **Description**: This test case verifies that reference data is mutation-free and that the priceHist logic correctly automates unit price entry
 
 ## Precondition
@@ -32,6 +32,6 @@
 
 | Test                       | Expected result                                                                           | Actual result | Pass/Fail |
 |----------------------------|-------------------------------------------------------------------------------------------|---------------|-----------|
-| Open  AddLineItemModal     | The form displays a prodCode dropdown and a blank unitPrice field.                        |               |           |
-| Select a specific Product. | The unitPrice field automatically populates with the correct latest price from priceHist. |               |           |
-| Compare unitPrice to DB.   | The auto-filled price matches the priceHist entry with the MAX(effDate) for that product. |               |           |
+| Open  AddLineItemModal     | The form displays a prodCode dropdown and a blank unitPrice field.                        | The form opens with a prodCode dropdown and an empty, read-only unitPrice field. | ✅ |
+| Select a specific Product. | The unitPrice field automatically populates with the correct latest price from priceHist. | The unitPrice field auto-fills after selection using the latest price history entry. | ✅ |
+| Compare unitPrice to DB.   | The auto-filled price matches the priceHist entry with the MAX(effDate) for that product. | The auto-filled value matches the priceHist row with the latest effDate for the selected product. | ✅ |
