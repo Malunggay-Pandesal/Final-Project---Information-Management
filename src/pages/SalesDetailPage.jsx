@@ -395,7 +395,7 @@ export default function SalesDetailPage() {
                   </td>
                   {/* Stamp (admin only) */}
                   {isAdmin && <td />}
-                  {/* Actions */}
+                  {/* Actions  */}
                   <td />
                 </tr>
               </tbody>
