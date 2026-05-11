@@ -1,7 +1,7 @@
 -- ============================================================
 -- Migration 01: Add record_status and stamp to sales & salesDetail
--- Run this AFTER importing the base HopeDB tables.
--- ============================================================
+-- run this AFTER importing the base HopeDB tables.
+-- ===============================================================
 
 -- add columns to sales
 ALTER TABLE sales
@@ -15,6 +15,6 @@ ALTER TABLE "salesDetail"
     CHECK (record_status IN ('ACTIVE', 'INACTIVE')),
   ADD COLUMN IF NOT EXISTS stamp VARCHAR(60);
 
--- Backfill existing rows
+-- Backfill existing rows ======
 UPDATE sales         SET record_status = 'ACTIVE' WHERE record_status IS NULL;
 UPDATE "salesDetail" SET record_status = 'ACTIVE' WHERE record_status IS NULL;
