@@ -119,7 +119,9 @@ function DetailForm({ initial, products, onSave, onCancel, saving }) {
   )
 }
 
-// ── Page ─────────────────────────────────────────────────────────────────────
+// ── Page pading ─────────────────────────────────────────────────────────────────────
+
+
 export default function SalesDetailPage() {
   const { transNo }         = useParams()
   const { currentUser }     = useAuth()
