@@ -4,7 +4,6 @@ import { useAuth }  from './AuthContext'
 
 const RightsContext = createContext({})
 
-// All 13 rights — default everything to 0 (deny)
 const DEFAULT_RIGHTS = {
   SALES_VIEW:   0,
   SALES_ADD:    0,
@@ -35,20 +34,22 @@ export function RightsProvider({ children }) {
 
     supabase
       .from('UserModule_Rights')
-      .select('rightCode, right_value')
+      .select('rightcode, right_value')
       .eq('userId', currentUser.userId)
-      .then(({ data }) => {
-        if (data) {
+      .then(({ data, error }) => {
+        if (data && data.length > 0) {
           const map = { ...DEFAULT_RIGHTS }
-          data.forEach(r => { map[r.rightCode] = r.right_value })
+          data.forEach(r => {
+            const code = r.rightcode
+            if (code) map[code] = r.right_value
+          })
           setRights(map)
         }
         setRightsLoaded(true)
       })
   }, [currentUser])
 
-  // Convenience: is this user ADMIN or SUPERADMIN?
-  const isAdmin = currentUser?.user_type === 'ADMIN' || currentUser?.user_type === 'SUPERADMIN'
+  const isAdmin      = currentUser?.user_type === 'ADMIN' || currentUser?.user_type === 'SUPERADMIN'
   const isSuperAdmin = currentUser?.user_type === 'SUPERADMIN'
 
   return (
