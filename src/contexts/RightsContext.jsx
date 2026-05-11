@@ -2,7 +2,9 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth }  from './AuthContext'
 
+
 const RightsContext = createContext({})
+
 
 const DEFAULT_RIGHTS = {
   SALES_VIEW:   0,
@@ -31,6 +33,7 @@ export function RightsProvider({ children }) {
       setRightsLoaded(false)
       return
     }
+    
 
     supabase
       .from('UserModule_Rights')
