@@ -39,7 +39,7 @@
 -- Handles automatic status propagation from:
 --   public.sales
 -- to:
---   public."salesDetail"
+--   public."salesdetail"
 -- ============================================================
 CREATE OR REPLACE FUNCTION public.cascade_sales_soft_delete()
 RETURNS TRIGGER
@@ -48,7 +48,7 @@ $$
 BEGIN
   -- Soft-delete cascade
   IF NEW.record_status = 'INACTIVE' AND OLD.record_status = 'ACTIVE' THEN
-    UPDATE public."salesDetail"
+    UPDATE public."salesdetail"
     SET record_status = 'INACTIVE',
         stamp = 'CASCADE-DEL ' || NEW."transNo" || ' ' || NOW()::text
     WHERE "transNo" = NEW."transNo";
