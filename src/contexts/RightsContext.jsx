@@ -58,5 +58,4 @@ export function RightsProvider({ children }) {
     </RightsContext.Provider>
   )
 }
-
 export const useRights = () => useContext(RightsContext)
