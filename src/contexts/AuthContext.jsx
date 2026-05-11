@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabase'
 
 const AuthContext = createContext(null)
 
-// Member 4: Function to fetch additional user data from our custom 'user' table
+// Member 4: Function to fetch additional user data from our custom 'user' Table
 async function fetchUserRow(userId) {
   const { data, error } = await supabase
     .from('user')
@@ -31,11 +31,18 @@ async function resolveSession(session, setCurrentUser, setAuthError) {
     setAuthError('Your account is currently PENDING. Wait for Manager approval.')
     setCurrentUser(null)
   } else {
+
+
+
+
     // Combine Auth data and Database data
     setCurrentUser({ ...session.user, ...userRow })
     setAuthError(null)
   }
 }
+
+
+
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null)
