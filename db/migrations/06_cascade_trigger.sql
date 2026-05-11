@@ -35,12 +35,12 @@
 
 -- ============================================================
 -- Function: cascade_sales_soft_delete
--- ============================================================
+-- ==============================================================
 -- Handles automatic status propagation from:
 --   public.sales
 -- to:
 --   public."salesdetail"
--- ============================================================
+-- ==============================================================
 CREATE OR REPLACE FUNCTION public.cascade_sales_soft_delete()
 RETURNS TRIGGER
 LANGUAGE plpgsql AS
