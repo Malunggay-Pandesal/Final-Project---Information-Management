@@ -22,6 +22,8 @@ function SaleForm({ initial, customers, employees, onSave, onCancel, saving }) {
   })
   const [errors, setErrors] = useState({})
 
+
+  
   function validate() {
     const e = {}
     if (!form.transNo.trim())  e.transNo   = 'Transaction number is required.'
