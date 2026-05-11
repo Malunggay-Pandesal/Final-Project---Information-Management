@@ -13,7 +13,7 @@ import Spinner     from '../components/ui/Spinner'
 import AlertBanner from '../components/ui/AlertBanner'
 import EmptyState  from '../components/ui/EmptyState'
 
-// ── Add / Edit line item form ─────────────────────────────────────────────────
+// ── Add / Edit line item form─────────────────────────────────────────────────
 function DetailForm({ initial, products, onSave, onCancel, saving }) {
   const [prodCode,     setProdCode]     = useState(initial?.prodcode  || '')
   const [quantity,     setQuantity]     = useState(initial?.quantity  || '')
