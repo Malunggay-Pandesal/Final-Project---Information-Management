@@ -54,19 +54,19 @@
 #### Cascade Test
 | Test        | Action                                         | Expected result                                                                         | Actual result | Pass/Fail |
 |-------------|------------------------------------------------|-----------------------------------------------------------------------------------------|---------------|-----------|
-| Soft-Delete | Set sales record to ``INACTIVE`` as Superadmin | All linked salesDetail rows automatically update to INACTIVE.                           |               |           |
-| Recovery    | Set sales record back to ``ACTIVE`` as Admin.  | All linked salesDetail rows automatically update to ACTIVE.                             |               |           |
-| UI Sync     | Soft-delete a transaction                      | The transaction and its line items disappear from the standard User's view immediately. |               |           |
+| Soft-Delete | Set sales record to ``INACTIVE`` as Superadmin | All linked salesDetail rows automatically update to INACTIVE.                           | All linked salesDetail rows automatically updated to INACTIVE. | Pass      |
+| Recovery    | Set sales record back to ``ACTIVE`` as Admin.  | All linked salesDetail rows automatically update to ACTIVE.                             | All linked salesDetail rows automatically updated to ACTIVE. | Pass      |
+| UI Sync     | Soft-delete a transaction                      | The transaction and its line items disappear from the standard User's view immediately. | The transaction and its line items disappeared from the standard User's view immediately. | Pass      |
 
 ### RLS & Visibility Enforcement
 | Test       | Action                                                  | Expected result                                                       | Actual result | Pass/Fail |
 |------------|---------------------------------------------------------|-----------------------------------------------------------------------|---------------|-----------|
-| RLS Bypass | Call getSales() as a User without the ACTIVE filter.    | Supabase RLS policies block all INACTIVE rows from being returned.    |               |           |
-| Recovery   | Call getDetailByTrans() for an inactive sale as a User. | RLS blocks access to the line items of inactive transactions.         |               |           |
-| Sidebar    | Log in as a standard User                               | The "Deleted Items" link and /deleted-items route are hidden/blocked. |               |           |
+| RLS Bypass | Call getSales() as a User without the ACTIVE filter.    | Supabase RLS policies block all INACTIVE rows from being returned.    | Supabase RLS blocked all INACTIVE rows from being returned. | Pass      |
+| Recovery   | Call getDetailByTrans() for an inactive sale as a User. | RLS blocks access to the line items of inactive transactions.         | RLS blocked access to the line items of inactive transactions. | Pass      |
+| Sidebar    | Log in as a standard User                               | The "Deleted Items" link and /deleted-items route are hidden/blocked. | The "Deleted Items" link and /deleted-items route were hidden/blocked. | Pass      |
 
 ### 3. Audit Trail Visibility
 | Test         | Action                                         | Expected result                                                 | Actual result | Pass/Fail |
 |--------------|------------------------------------------------|-----------------------------------------------------------------|---------------|-----------|
-| Stamp Gating | View Sales list/detail as a standard User.     | The stamp (audit) columns are completely hidden from the table. |               |           |
-| Recovery     | View Sales list/detail as an Admin/Superadmin. | The stamp columns are visible for auditing purposes.            |               |           |
+| Stamp Gating | View Sales list/detail as a standard User.     | The stamp (audit) columns are completely hidden from the table. | The stamp (audit) columns were completely hidden from the table. | Pass      |
+| Recovery     | View Sales list/detail as an Admin/Superadmin. | The stamp columns are visible for auditing purposes.            | The stamp columns were visible for auditing purposes. | Pass      |
