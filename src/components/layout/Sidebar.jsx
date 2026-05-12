@@ -1,6 +1,5 @@
 import { NavLink } from 'react-router-dom'
 import { useAuth }   from '../../contexts/AuthContext'
-import { useRights } from '../../contexts/RightsContext'
 
 const Icon = ({ path, className = 'w-4 h-4' }) => (
   <svg className={className} fill="none" stroke="currentColor" strokeWidth={1.75}
@@ -46,7 +45,6 @@ function SectionLabel({ children }) {
   )
 }
 
-// Role colors for the badge
 const ROLE_STYLE = {
   SUPERADMIN: 'bg-indigo-500/20 text-indigo-200 ring-1 ring-indigo-400/30',
   ADMIN:      'bg-emerald-500/20 text-emerald-200 ring-1 ring-emerald-400/30',
@@ -55,7 +53,9 @@ const ROLE_STYLE = {
 
 export default function Sidebar() {
   const { currentUser } = useAuth()
-  const { isAdmin }     = useRights()
+  
+  // Member 4: Based on Rights Matrix 3.2, ADM_USER is YES for SUPERADMIN only.
+  const isSuperAdmin = currentUser?.user_type === 'SUPERADMIN'
 
   const displayName = currentUser?.username
     || currentUser?.email?.split('@')[0]
@@ -63,7 +63,6 @@ export default function Sidebar() {
 
   return (
     <aside className="hidden md:flex flex-col w-60 bg-surface-900 shrink-0">
-      {/* ── Brand header ── */}
       <div className="flex items-center gap-3 px-4 py-5">
         <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
           <span className="text-white font-bold text-sm tracking-tight">H</span>
@@ -74,7 +73,6 @@ export default function Sidebar() {
         </div>
       </div>
 
-      {/* ── User info ── */}
       <div className="mx-3 mb-2 px-3 py-2.5 rounded-lg bg-white/5 border border-white/8">
         <p className="text-white text-xs font-semibold truncate">{displayName}</p>
         <div className="flex items-center gap-2 mt-1">
@@ -85,7 +83,6 @@ export default function Sidebar() {
         </div>
       </div>
 
-      {/* ── Navigation ── */}
       <nav className="flex-1 overflow-y-auto px-3 pb-4">
         <SectionLabel>Transactions</SectionLabel>
         <NavItem to="/sales" icon="sales" label="Sales Transactions" end />
@@ -99,8 +96,8 @@ export default function Sidebar() {
         <SectionLabel>Analytics</SectionLabel>
         <NavItem to="/reports" icon="reports" label="Reports" />
 
-        {/* Admin/SuperAdmin only */}
-        {isAdmin && (
+        {/* Member 4: Rights Matrix gating - Restricted to SUPERADMIN only */}
+        {isSuperAdmin && (
           <>
             <SectionLabel>Administration</SectionLabel>
             <NavItem to="/deleted-items" icon="trash" label="Deleted Items" />
@@ -109,7 +106,6 @@ export default function Sidebar() {
         )}
       </nav>
 
-      {/* ── Footer ── */}
       <div className="px-4 py-3 border-t border-white/8">
         <p className="text-[11px] text-surface-600">Hope, Inc. © {new Date().getFullYear()}</p>
       </div>
