@@ -1,10 +1,8 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
-import { useAuth }  from './AuthContext'
-
+import { useAuth } from './AuthContext'
 
 const RightsContext = createContext({})
-
 
 const DEFAULT_RIGHTS = {
   SALES_VIEW:   0,
@@ -24,7 +22,7 @@ const DEFAULT_RIGHTS = {
 
 export function RightsProvider({ children }) {
   const { currentUser } = useAuth()
-  const [rights,       setRights]       = useState(DEFAULT_RIGHTS)
+  const [rights, setRights] = useState(DEFAULT_RIGHTS)
   const [rightsLoaded, setRightsLoaded] = useState(false)
 
   useEffect(() => {
@@ -33,7 +31,6 @@ export function RightsProvider({ children }) {
       setRightsLoaded(false)
       return
     }
-    
 
     supabase
       .from('UserModule_Rights')
@@ -52,13 +49,30 @@ export function RightsProvider({ children }) {
       })
   }, [currentUser])
 
-  const isAdmin      = currentUser?.user_type === 'ADMIN' || currentUser?.user_type === 'SUPERADMIN'
+  // Declare these FIRST so checkRight can reference them
+  const isAdmin = currentUser?.user_type === 'ADMIN' || currentUser?.user_type === 'SUPERADMIN'
   const isSuperAdmin = currentUser?.user_type === 'SUPERADMIN'
 
+  // Helper to check if a specific right is granted (1 = True)
+  // ADMIN implicitly gets all ADD/EDIT/VIEW/LOOKUP rights (but NOT DEL — SUPERADMIN only)
+  const DEL_RIGHTS = ['SALES_DEL', 'SD_DEL']
+  const checkRight = (rightCode) => {
+    if (isSuperAdmin) return true
+    if (isAdmin && !DEL_RIGHTS.includes(rightCode)) return true
+    return rights[rightCode] === 1
+  }
+
   return (
-    <RightsContext.Provider value={{ rights, rightsLoaded, isAdmin, isSuperAdmin }}>
+    <RightsContext.Provider value={{ 
+      rights, 
+      rightsLoaded, 
+      isAdmin, 
+      isSuperAdmin,
+      checkRight 
+    }}>
       {children}
     </RightsContext.Provider>
   )
 }
+
 export const useRights = () => useContext(RightsContext)

@@ -140,7 +140,7 @@ function ConfirmDialog({ open, onClose, onConfirm, loading, transNo }) {
 // ── Page ─────────────────────────────────────────────────────────────────────
 export default function SalesListPage() {
   const { currentUser }                   = useAuth()
-  const { rights, isAdmin, isSuperAdmin } = useRights()
+  const { isAdmin, isSuperAdmin, checkRight } = useRights()
 
   const [sales,     setSales]     = useState([])
   const [customers, setCustomers] = useState([])
@@ -238,7 +238,7 @@ export default function SalesListPage() {
           </p>
         </div>
         {/* Create button — gated by SALES_ADD */}
-        {rights.SALES_ADD === 1 && (
+        {checkRight('SALES_ADD') && (
           <button className="btn-primary" onClick={openAdd}>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -338,7 +338,7 @@ export default function SalesListPage() {
                         </svg>
                       </Link>
                       {/* Edit — gated by SALES_EDIT */}
-                      {rights.SALES_EDIT === 1 && s.record_status === 'ACTIVE' && (
+                      {checkRight('SALES_EDIT') && s.record_status === 'ACTIVE' && (
                         <button className="btn-ghost btn-sm" title="Edit" onClick={() => setEditTarget(s)}>
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -346,7 +346,7 @@ export default function SalesListPage() {
                         </button>
                       )}
                       {/* Soft-delete — gated by SALES_DEL (SUPERADMIN only) */}
-                      {rights.SALES_DEL === 1 && s.record_status === 'ACTIVE' && (
+                      {checkRight('SALES_DEL') && s.record_status === 'ACTIVE' && (
                         <button className="btn-ghost btn-sm text-red-500 hover:text-red-700 hover:bg-red-50"
                                 title="Soft-delete" onClick={() => setDelTarget(s)}>
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
