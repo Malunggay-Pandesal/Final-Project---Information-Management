@@ -25,13 +25,16 @@
 ---
 
 ## 1. Introduction
-The Sales Management System (SMS) is a full-stack sales management app for Hope Inc. designed to streamline transaction tracking, provide real-time inventory pricing, and generate analytical insights for business growth. 
+The HOPE Inc. Sales Management System (HOPE-SMS) is a full-stack sales management app for Hope Inc. designed to streamline transaction tracking, provide real-time inventory pricing, and generate analytical insights for business growth. 
 
 Core features include full CRUD for sales and salesDetail with soft-delete recovery; read-only lookup views for customers, employees, products, and price history; role-based access control with 13 granular rights; four analytical reports (by employee, by customer, top products, and monthly trends); admin user management with deleted-items recovery; and Email/password plus Google OAuth authentication via Supabase.
 
 
 ## 2. Getting Started
 ### 2.1 Authentication
+![alt text](./images/loginpage.png)
+
+Figure 1: Login Page
 - **Email Login:** Standard credentials provided by your Administrator.
 - **Google OAuth:** Use your Google account for secure, one-click access.
 - **Login Guard:** Users with an "Inactive" status will be denied access to the dashboard.
@@ -45,6 +48,9 @@ The Sidebar provides access to:
 
 ## 3. Sales Management
 ### 3.1 Managing Transactions
+![alt text](images/salestransactionspage.png)
+
+Figure 2: Sales Transactions Page
 - **Add Transaction:** Select a Customer and Employee from the validated dropdowns.
 
 > [!NOTE]  
@@ -55,6 +61,9 @@ The Sidebar provides access to:
 > This module can only be accessed by accounts that has ``SUPERADMIN`` role
 
 ### 3.2 Sales Details & Line Items
+![alt text](images/lineitem.png)
+
+Figure 3: Sales Line Items
 - Navigate into a specific sale to manage line items.
 - Line items support adding, editing, and soft-deletion.
 
@@ -62,6 +71,9 @@ The Sidebar provides access to:
 The system automatically fetches the unit price from the **Price History** table based on the most recent effective date for the selected product.
 
 ## 4. Reference Modules (Lookups)
+![alt text](images/productslookup.png)
+
+Figure 4: Products Lookup Page
 Lookup pages are **Strictly Read-Only** to maintain data integrity:
 - **Customers:** Database of clients.
 - **Employees:** Active personnel records.
@@ -69,6 +81,9 @@ Lookup pages are **Strictly Read-Only** to maintain data integrity:
 - **Price History:** Audit log of all price changes.
 
 ## 5. Analytical Reports
+![](/docs/user-manual/images/analyticspage.png)
+
+Figure 5: Analytics Page
 - **Sales by Employee:** Performance metrics for sales staff.
 - **Sales by Customer:** Revenue breakdown per client.
 - **Top Products:** High-volume inventory analysis.
@@ -80,15 +95,22 @@ Lookup pages are **Strictly Read-Only** to maintain data integrity:
 > This module can only be accessed by accounts that has ``SUPERADMIN`` and ``ADMIN`` role
 
 Administrators can toggle user status between **Active** and **Inactive**. Inactivating a user revokes their system access immediately.
+![](/docs/user-manual/images/usermanagement.png)
+
+Figure 6: User Management Page
 
 ### 6.2 Superadmin Protection
 The system includes a hard guard: **Superadmin accounts cannot be deactivated by other Administrators.** This prevents accidental lockout of the primary system owners.
 
+
 ### 6.3 Data Recovery (Deleted Items)
 > [!NOTE]  
-> This module can only be accessed by accounts that has ``SUPERADMIN`` role
+> This module can only be accessed by accounts that has ``SUPERADMIN`` and ``ADMIN`` role
 
 The **Deleted Items** module allows Admins to view soft-deleted records and restore them to the main Sales list.
+![](/docs/user-manual/images/deleteditemspage.png)
+
+Figure 7: Deleted Items Page
 
 ## 7. Troubleshooting
 - **Permission Denied (403):** Your account lacks the specific Right (e.g., `SALES_DEL`) required for this action.
