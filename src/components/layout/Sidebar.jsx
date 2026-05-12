@@ -46,7 +46,7 @@ function SectionLabel({ children }) {
   )
 }
 
-// Role colors for the badge
+// role colors for the badge with gold
 const ROLE_STYLE = {
   SUPERADMIN: 'bg-indigo-500/20 text-indigo-200 ring-1 ring-indigo-400/30',
   ADMIN:      'bg-emerald-500/20 text-emerald-200 ring-1 ring-emerald-400/30',
@@ -57,24 +57,35 @@ export default function Sidebar() {
   const { currentUser } = useAuth()
   const { isAdmin }     = useRights()
 
+
   const displayName = currentUser?.username
+
     || currentUser?.email?.split('@')[0]
+
     || 'User'
 
+
   return (
+  
     <aside className="hidden md:flex flex-col w-60 bg-surface-900 shrink-0">
+
       {/* ── Brand header ── */}
       <div className="flex items-center gap-3 px-4 py-5">
+
         <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
           <span className="text-white font-bold text-sm tracking-tight">H</span>
         </div>
         <div>
           <p className="text-white font-semibold text-sm leading-none">Hope SMS</p>
+
           <p className="text-surface-500 text-[11px] mt-0.5">Sales Management</p>
         </div>
       </div>
 
-      {/* ── User info ── */}
+
+
+
+      {/* ── user info ── */}
       <div className="mx-3 mb-2 px-3 py-2.5 rounded-lg bg-white/5 border border-white/8">
         <p className="text-white text-xs font-semibold truncate">{displayName}</p>
         <div className="flex items-center gap-2 mt-1">
