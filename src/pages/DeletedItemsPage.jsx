@@ -4,13 +4,6 @@
  * Allows recovery (set record_status = 'ACTIVE').
  * Route guard (AdminRoute) blocks USER accounts at the router level.
  */
-
-
-
-
-
-
-
 import { useEffect, useState, useCallback } from 'react'
 import { useAuth }   from '../contexts/AuthContext'
 import { getDeletedSales, recoverSale }        from '../services/salesService'
@@ -48,24 +41,24 @@ export default function DeletedItemsPage() {
 
   useEffect(() => { fetchAll() }, [fetchAll])
 
-  async function handleRecoverSale(transNo) {
-    setRecovering(transNo)
-    const { error: err } = await recoverSale(transNo, currentUser.userId)
+  async function handleRecoverSale(transno) {
+    setRecovering(transno)
+    const { error: err } = await recoverSale(transno, currentUser.userId)
     if (err) setError(err.message)
     else {
-      setSuccess(`Transaction ${transNo} and all its line items restored.`)
+      setSuccess(`Transaction ${transno} and all its line items restored.`)
       fetchAll()
     }
     setRecovering(null)
   }
 
-  async function handleRecoverLine(transNo, prodCode) {
-    const key = `${transNo}-${prodCode}`
+  async function handleRecoverLine(transno, prodcode) {
+    const key = `${transno}-${prodcode}`
     setRecovering(key)
-    const { error: err } = await recoverDetailLine(transNo, prodCode, currentUser.userId)
+    const { error: err } = await recoverDetailLine(transno, prodcode, currentUser.userId)
     if (err) setError(err.message)
     else {
-      setSuccess(`Line item ${prodCode} in ${transNo} restored.`)
+      setSuccess(`Line item ${prodcode} in ${transno} restored.`)
       fetchAll()
     }
     setRecovering(null)
@@ -130,21 +123,22 @@ export default function DeletedItemsPage() {
               </thead>
               <tbody>
                 {sales.map(s => (
-                  <tr key={s.transNo} className="opacity-75">
-                    <td className="font-mono font-medium text-surface-600">{s.transNo}</td>
-                    <td className="text-surface-500">{formatDate(s.salesDate)}</td>
+                  <tr key={s.transno} className="opacity-75">
+                    {/* FIX: was s.transNo, s.salesDate, s.empName — all must be lowercase */}
+                    <td className="font-mono font-medium text-surface-600">{s.transno}</td>
+                    <td className="text-surface-500">{formatDate(s.salesdate)}</td>
                     <td>{s.custname}</td>
-                    <td>{s.empName}</td>
+                    <td>{s.empname}</td>
                     <td className="text-center">{s.lineitemcount ?? 0}</td>
                     <td className="tabular-nums">{s.totalamount ? formatCurrency(s.totalamount) : '—'}</td>
                     <td className="text-xs font-mono text-surface-400 max-w-xs truncate">{s.stamp || '—'}</td>
                     <td>
                       <button
                         className="btn-success btn-sm"
-                        onClick={() => handleRecoverSale(s.transNo)}
-                        disabled={recovering === s.transNo}
+                        onClick={() => handleRecoverSale(s.transno)}
+                        disabled={recovering === s.transno}
                       >
-                        {recovering === s.transNo ? <Spinner size="sm" /> : (
+                        {recovering === s.transno ? <Spinner size="sm" /> : (
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                           </svg>
@@ -183,11 +177,12 @@ export default function DeletedItemsPage() {
               </thead>
               <tbody>
                 {lines.map(l => {
-                  const key = `${l.transNo}-${l.prodCode}`
+                  {/* FIX: was l.transNo, l.prodCode — must be lowercase */}
+                  const key = `${l.transno}-${l.prodcode}`
                   return (
                     <tr key={key} className="opacity-75">
-                      <td className="font-mono text-surface-600">{l.transNo}</td>
-                      <td className="font-mono font-medium">{l.prodCode}</td>
+                      <td className="font-mono text-surface-600">{l.transno}</td>
+                      <td className="font-mono font-medium">{l.prodcode}</td>
                       <td>{l.description}</td>
                       <td className="text-right tabular-nums">{parseFloat(l.quantity).toLocaleString()}</td>
                       <td className="text-right tabular-nums">{formatCurrency(l.unitprice)}</td>
@@ -195,7 +190,7 @@ export default function DeletedItemsPage() {
                       <td>
                         <button
                           className="btn-success btn-sm"
-                          onClick={() => handleRecoverLine(l.transNo, l.prodCode)}
+                          onClick={() => handleRecoverLine(l.transno, l.prodcode)}
                           disabled={recovering === key}
                         >
                           {recovering === key ? <Spinner size="sm" /> : (
