@@ -125,7 +125,7 @@ function DetailForm({ initial, products, onSave, onCancel, saving }) {
 export default function SalesDetailPage() {
   const { transNo }         = useParams()
   const { currentUser }     = useAuth()
-  const { rights, isAdmin } = useRights()
+  const { isAdmin, checkRight } = useRights()
 
   const [transaction, setTransaction] = useState(null)
   const [lines,       setLines]       = useState([])
@@ -293,7 +293,7 @@ export default function SalesDetailPage() {
           <h2 className="text-base font-semibold text-surface-800">Line Items</h2>
 
           {/* Add line item — gated by SD_ADD */}
-          {rights.SD_ADD === 1 && transaction?.record_status === 'ACTIVE' && (
+          {checkRight('SD_ADD') && transaction?.record_status === 'ACTIVE' && (
             <button className="btn-primary btn-sm" onClick={() => setAddOpen(true)}>
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2}
                    viewBox="0 0 24 24">
@@ -310,7 +310,7 @@ export default function SalesDetailPage() {
               icon="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
               title="No line items yet"
               description={
-                rights.SD_ADD === 1
+                checkRight('SD_ADD')
                   ? 'Add the first product to this transaction.'
                   : 'No products in this transaction.'
               }
@@ -353,7 +353,7 @@ export default function SalesDetailPage() {
                     <td>
                       <div className="flex items-center gap-1 justify-end">
                         {/* Edit — gated by SD_EDIT */}
-                        {rights.SD_EDIT === 1 && (
+                        {checkRight('SD_EDIT') && (
                           <button
                             className="btn-ghost btn-sm"
                             title="Edit quantity"
@@ -367,7 +367,7 @@ export default function SalesDetailPage() {
                           </button>
                         )}
                         {/* Soft-delete — gated by SD_DEL (SUPERADMIN only) */}
-                        {rights.SD_DEL === 1 && (
+                        {checkRight('SD_DEL') && (
                           <button
                             className="btn-ghost btn-sm text-red-500 hover:bg-red-50"
                             title="Soft-delete line item"
