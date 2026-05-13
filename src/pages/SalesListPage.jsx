@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useAuth }   from '../contexts/AuthContext'
 import { useRights } from '../contexts/RightsContext'
 import {
-  getSales, createSale, updateSale, softDeleteSale, getLatestTransNo,
+  getSales, createSale, updateSale, softDeleteSale, recoverSale, getLatestTransNo,
 } from '../services/salesService'
 import { getCustomers, getEmployees } from '../services/lookupService'
 import { formatDate, formatCurrency, nextTransNo } from '../utils/format'
@@ -156,6 +156,7 @@ export default function SalesListPage() {
   const [delTarget,  setDelTarget]  = useState(null)
   const [saving,     setSaving]     = useState(false)
   const [deleting,   setDeleting]   = useState(false)
+  const [recovering, setRecovering] = useState(null)
 
   // Suggested next transno
   const [nextTrans, setNextTrans] = useState('')
@@ -214,6 +215,17 @@ export default function SalesListPage() {
       fetchSales()
     }
     setDeleting(false)
+  }
+
+  async function handleRecover(transno) {
+    setRecovering(transno)
+    const { error: err } = await recoverSale(transno, currentUser.userId)
+    if (err) setError(err.message)
+    else {
+      setSuccess(`Transaction ${transno} and its line items recovered.`)
+      fetchSales()
+    }
+    setRecovering(null)
   }
 
   // Filter by search — all view columns are now lowercase
@@ -297,7 +309,7 @@ export default function SalesListPage() {
             </thead>
             <tbody>
               {filtered.map(s => (
-                <tr key={s.transno}>
+                <tr key={s.transno} className={s.record_status === 'INACTIVE' ? 'opacity-60' : ''}>
                   <td>
                     <Link to={`/sales/${s.transno}`}
                           className="font-mono text-brand-600 hover:text-brand-800 hover:underline font-medium">
@@ -337,21 +349,36 @@ export default function SalesListPage() {
                           <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                         </svg>
                       </Link>
-                      {/* Edit — gated by SALES_EDIT */}
-                      {checkRight('SALES_EDIT') && s.record_status === 'ACTIVE' && (
+                      {/* Edit — gated by SALES_EDIT, ACTIVE only */}
+                      {rights.SALES_EDIT === 1 && s.record_status === 'ACTIVE' && (
                         <button className="btn-ghost btn-sm" title="Edit" onClick={() => setEditTarget(s)}>
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                           </svg>
                         </button>
                       )}
-                      {/* Soft-delete — gated by SALES_DEL (SUPERADMIN only) */}
-                      {checkRight('SALES_DEL') && s.record_status === 'ACTIVE' && (
+                      {/* Soft-delete — gated by SALES_DEL (SUPERADMIN only), ACTIVE only */}
+                      {rights.SALES_DEL === 1 && s.record_status === 'ACTIVE' && (
                         <button className="btn-ghost btn-sm text-red-500 hover:text-red-700 hover:bg-red-50"
                                 title="Soft-delete" onClick={() => setDelTarget(s)}>
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                           </svg>
+                        </button>
+                      )}
+                      {/* Recover — INACTIVE rows only, ADMIN / SUPERADMIN */}
+                      {isAdmin && s.record_status === 'INACTIVE' && (
+                        <button
+                          className="btn-ghost btn-sm text-green-600 hover:text-green-800 hover:bg-green-50"
+                          title="Recover transaction"
+                          onClick={() => handleRecover(s.transno)}
+                          disabled={recovering === s.transno}
+                        >
+                          {recovering === s.transno ? <Spinner size="sm" /> : (
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                          )}
                         </button>
                       )}
                     </div>
