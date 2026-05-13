@@ -173,15 +173,16 @@ The app is deployed to Vercel.
 | `main` | Production-ready code |
 | `dev` | Stable integration branch |
 | `feature/*` | Individual features |
-
+## ERD
+![](/docs/db_erd.jpg)
 ## Team
 
-| # | Role | Responsibilities |
-|---|------|----------------|
-| M1 | Project Lead / Full-Stack | Sprint coordination, API wiring, routing, deployment |
-| M2 | Frontend Developer | React pages, UI/UX, responsive design |
-| M3 | DB Engineer | Schema, migrations, RLS policies, SQL views |
-| M4 | Rights & Auth Specialist | AuthContext, RightsContext, OAuth, login guard |
-| M5 | QA / Documentation | Test cases, user manual, sprint log, slides |
+| # | Name |Role | Responsibilities |
+|---|-------|-----|----------------|
+| M1 |Lance Dwight Aguilar| Project Lead / Full-Stack | Sprint coordination, API wiring, routing, deployment |
+| M2 |Jan-Neo Gloria| Frontend Developer | React pages, UI/UX, responsive design |
+| M3 |Erick Ian Litao| DB Engineer | Schema, migrations, RLS policies, SQL views |
+| M4 |Jun Angelo Uri | Rights & Auth Specialist | AuthContext, RightsContext, OAuth, login guard |
+| M5 |Darwin Baysa| QA / Documentation | Test cases, user manual, sprint log, slides |
 
 Hope, Inc. Sales Management System · New Era University CCS · AY 2025–2026
