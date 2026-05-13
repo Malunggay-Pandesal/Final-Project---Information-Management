@@ -13,33 +13,86 @@
 - Tester is signed out of all SMS sessions and, if testing Google OAuth, signed out of Google accounts in the browser or using an incognito window to avoid session bleed.
 
 
+## Definitions
+- **Allowed**: Feature is visible and clickable; action executes successfully with no permission errors
+- **Hidden**: Feature/button/menu item is not visible in the UI for that role
+- **Blocked**: Feature is visible but clicking it shows a "No permission" or similar error message
+
 ### Test Steps
-1. Open the SMS:   
-https://improject-hope-sms.netlify.app/
-2. Login using Email/Google Account
-3. Check access to system modules
+**For each test user role (Superadmin, Admin, User):**
 
-### Expected Result:
-- User may be allowed or restrict access to different SMS modules depending on role's access limitations
+1. Open the SMS at https://improject-hope-sms.netlify.app/
+2. Clear browser cache and sign out of all accounts
+3. Login with the test user account (Email or Google OAuth)
+4. Navigate to Sales Transactions module
+5. For each right listed in the Test Data matrix:
+   - **View Sales Transactions**: Verify sales list is visible and loadable
+   - **Add new Sales Transaction**: Attempt to click "Add" button → verify visibility, clickability, and success/error
+   - **Edit Sales Transaction**: Select a transaction → attempt to click "Edit" → verify visibility, clickability, and success/error
+   - **Soft-Delete Sales Transactions**: Select a transaction → attempt to click "Delete" → verify visibility, clickability, and success/error
+   - **Add/Edit/Soft-Delete Sales Details**: Repeat above for line items within transactions
+6. Navigate to Lookup modules (Customer, Employee, Products, Price) → verify visibility and searchability
+7. Navigate to Admin section → attempt to access "Manage User accounts" → verify visibility and access
+8. Document actual result for each right/role combination in the Test Data table
+9. Sign out and repeat for next role
+
+### Expected Result
+All 13 rights × 3 roles = 39 scenarios should match the expected access levels in the Test Data matrix (Allowed/Hidden/Blocked)
 
 
-### Test Data:
-> **Legend**:  
-> ✅: Pass  
-> ❌: Fail  
-> ? : confirming...
+### Test Data
 
-| Rights                    | Superadmin  | Admin | User               |
-|---------------------------|-------------|-------|--------------------|
-| View Sales Transactions   | ✅ (Allowed) |       | ✅ (Allowed)        |
-| Add new Sales Transaction | ✅ (Allowed) |       | ?                  |
-| Edit Sales Transaction    | ?           |       | ?                  |
-| Delete Sales Transactions | ?           |       | ✅ (Hidden/Blocked) |
-| Add Sales Details         | ?           |       | ?                  |
-| Edit Sales Details        | ?           |       | ?                  |
-| Delete Sales Details      | ?           |       | ✅ (Hidden/Blocked) |
-| Customer Lookup           | ✅ (Allowed) |       | ✅ (Allowed)        |
-| Employee Lookup           | ✅ (Allowed) |       | ✅ (Allowed)        |
-| Products lookup           | ✅ (Allowed) |       | ✅ (Allowed)        |
-| Price lookup              | ✅ (Allowed) |       | ✅ (Allowed)        |
-| Manage User accounts      | ✅ (Allowed) |       | ✅ (Hidden/Blocked) |
+
+#### Superadmin Results
+
+| Rights                         | Expected | Actual | Status |
+|--------------------------------|----------|--------|--------|
+| (SALES_VIEW) — View Transactions        | ✅ Allowed | ✅ Allowed | ✅ PASS |
+| (SALES_ADD) — Create Transaction      | ✅ Allowed | ✅ Allowed | ✅ PASS |
+| (SALES_EDIT) — Edit Transactions         | ✅ Allowed | ✅ Allowed | ✅ PASS |
+| (SALES_DELETE) — Soft-Delete Transactions | ✅ Allowed | ✅ Allowed | ✅ PASS |
+| (SD_VIEW) — View Sales Details        | ✅ Allowed | ✅ Allowed | ✅ PASS |
+| (SD_ADD) — Add Line              | ✅ Allowed | ✅ Allowed | ✅ PASS |
+| (SD_EDIT) — Edit Line             | ✅ Allowed | ✅ Allowed | ✅ PASS |
+| (SD_DEL) — Soft Delete Line      | ✅ Allowed | ✅ Allowed | ✅ PASS |
+| (CUST_LOOKUP) — Look Up Customer                | 👁️ Lookup | 👁️ Lookup | ✅ PASS |
+| (EMP_LOOKUP) — Look Up Employee                | 👁️ Lookup | 👁️ Lookup | ✅ PASS |
+| (PROD_LOOKUP) — Look Up Products                | 👁️ Lookup | 👁️ Lookup | ✅ PASS |
+| (PRICE_LOOKUP) — Look Up Price History                   | 👁️ Lookup | 👁️ Lookup | ✅ PASS |
+| (ADM_USER) — Manage Users           | ✅ Allowed | ✅ Allowed | ✅ PASS |
+
+#### Admin Results
+
+| Rights                         | Expected | Actual | Status |
+|--------------------------------|----------|--------|--------|
+| (SALES_VIEW) — View Transactions        | ✅ Allowed | ✅ Allowed | ✅ PASS |
+| (SALES_ADD) — Create Transaction      | ✅ Allowed | ✅ Allowed | ✅ PASS |
+| (SALES_EDIT) — Edit Transactions         | ✅ Allowed | ✅ Allowed | ✅ PASS |
+| (SALES_DELETE) — Soft-Delete Transactions | ❌ Blocked | ❌ Blocked | ✅ PASS |
+| (SD_VIEW) — View Sales Details        | ✅ Allowed | ✅ Allowed | ✅ PASS |
+| (SD_ADD) — Add Line              | ✅ Allowed | ✅ Allowed | ✅ PASS |
+| (SD_EDIT) — Edit Line             | ✅ Allowed | ✅ Allowed | ✅ PASS |
+| (SD_DEL) — Soft Delete Line      | ❌ Blocked | ❌ Blocked | ✅ PASS |
+| (CUST_LOOKUP) — Look Up Customer                | 👁️ Lookup | 👁️ Lookup | ✅ PASS |
+| (EMP_LOOKUP) — Look Up Employee                | 👁️ Lookup | 👁️ Lookup | ✅ PASS |
+| (PROD_LOOKUP) — Look Up Products                | 👁️ Lookup | 👁️ Lookup | ✅ PASS |
+| (PRICE_LOOKUP) — Look Up Price History                   | 👁️ Lookup | 👁️ Lookup | ✅ PASS |
+| (ADM_USER) — Manage Users           | ❌ Blocked | ❌ Blocked | ✅ PASS |
+
+#### User Results
+
+| Rights                         | Expected | Actual | Status |
+|--------------------------------|----------|--------|--------|
+| (SALES_VIEW) — View Transactions        | ✅ Allowed | ✅ Allowed | ✅ PASS |
+| (SALES_ADD) — Create Transaction      | ❌ Blocked | ❌ Blocked | ✅ PASS |
+| (SALES_EDIT) — Edit Transactions         | ❌ Blocked | ❌ Blocked | ✅ PASS |
+| (SALES_DELETE) — Soft-Delete Transactions | ❌ Blocked | ❌ Blocked | ✅ PASS |
+| (SD_VIEW) — View Sales Details        | ✅ Allowed | ✅ Allowed | ✅ PASS |
+| (SD_ADD) — Add Line              | ❌ Blocked | ❌ Blocked | ✅ PASS |
+| (SD_EDIT) — Edit Line             | ❌ Blocked | ❌ Blocked | ✅ PASS |
+| (SD_DEL) — Soft Delete Line      | ❌ Blocked | ❌ Blocked | ✅ PASS |
+| (CUST_LOOKUP) — Look Up Customer                | 👁️ Lookup | 👁️ Lookup | ✅ PASS |
+| (EMP_LOOKUP) — Look Up Employee                | 👁️ Lookup | 👁️ Lookup | ✅ PASS |
+| (PROD_LOOKUP) — Look Up Products                | 👁️ Lookup | 👁️ Lookup | ✅ PASS |
+| (PRICE_LOOKUP) — Look Up Price History                   | 👁️ Lookup | 👁️ Lookup | ✅ PASS |
+| (ADM_USER) — Manage Users           | ❌ Blocked | ❌ Blocked | ✅ PASS |

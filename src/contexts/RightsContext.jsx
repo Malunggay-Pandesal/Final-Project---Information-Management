@@ -1,10 +1,9 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
-import { useAuth }  from './AuthContext'
+import { useAuth } from './AuthContext'
 
 const RightsContext = createContext({})
 
-// All 13 rights — default everything to 0 (deny)
 const DEFAULT_RIGHTS = {
   SALES_VIEW:   0,
   SALES_ADD:    0,
@@ -23,7 +22,7 @@ const DEFAULT_RIGHTS = {
 
 export function RightsProvider({ children }) {
   const { currentUser } = useAuth()
-  const [rights,       setRights]       = useState(DEFAULT_RIGHTS)
+  const [rights, setRights] = useState(DEFAULT_RIGHTS)
   const [rightsLoaded, setRightsLoaded] = useState(false)
 
   useEffect(() => {
@@ -35,24 +34,42 @@ export function RightsProvider({ children }) {
 
     supabase
       .from('UserModule_Rights')
-      .select('rightCode, right_value')
+      .select('rightcode, right_value')
       .eq('userId', currentUser.userId)
-      .then(({ data }) => {
-        if (data) {
+      .then(({ data, error }) => {
+        if (data && data.length > 0) {
           const map = { ...DEFAULT_RIGHTS }
-          data.forEach(r => { map[r.rightCode] = r.right_value })
+          data.forEach(r => {
+            const code = r.rightcode
+            if (code) map[code] = r.right_value
+          })
           setRights(map)
         }
         setRightsLoaded(true)
       })
   }, [currentUser])
 
-  // Convenience: is this user ADMIN or SUPERADMIN?
+  // Declare these FIRST so checkRight can reference them
   const isAdmin = currentUser?.user_type === 'ADMIN' || currentUser?.user_type === 'SUPERADMIN'
   const isSuperAdmin = currentUser?.user_type === 'SUPERADMIN'
 
+  // Helper to check if a specific right is granted (1 = True)
+  // ADMIN implicitly gets all ADD/EDIT/VIEW/LOOKUP rights (but NOT DEL — SUPERADMIN only)
+  const DEL_RIGHTS = ['SALES_DEL', 'SD_DEL']
+  const checkRight = (rightCode) => {
+    if (isSuperAdmin) return true
+    if (isAdmin && !DEL_RIGHTS.includes(rightCode)) return true
+    return rights[rightCode] === 1
+  }
+
   return (
-    <RightsContext.Provider value={{ rights, rightsLoaded, isAdmin, isSuperAdmin }}>
+    <RightsContext.Provider value={{ 
+      rights, 
+      rightsLoaded, 
+      isAdmin, 
+      isSuperAdmin,
+      checkRight 
+    }}>
       {children}
     </RightsContext.Provider>
   )

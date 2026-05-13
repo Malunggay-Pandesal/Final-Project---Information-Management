@@ -2,7 +2,11 @@
  * Admin (User Management) Page — ADMIN / SUPERADMIN only.
  * * Member 4 Contribution (Sprint 3):
  * - W5 PR-02: SUPERADMIN-protected row logic.
- * - Implemented UI-level disabling of action buttons for SuperAdmin accounts.
+ * RULE: ADMIN cannot activate/deactivate SUPERADMIN accounts.
+ *       Enforced at:
+ *        1. UI level — buttons are disabled with tooltip on SUPERADMIN rows.
+ *        2. Service level — .neq('user_type','SUPERADMIN') guard in adminService.
+ *        3. Db level — RLS policy rejects UPDATE where user_type = 'SUPERADMIN'.
  */
 import { useEffect, useState, useCallback } from 'react'
 import { useAuth }   from '../contexts/AuthContext'

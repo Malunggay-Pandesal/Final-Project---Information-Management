@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase'
 
 const AuthContext = createContext(null)
 
+// Member 4: Function to fetch additional user data from our custom 'user' Table
 async function fetchUserRow(userId) {
   const { data, error } = await supabase
     .from('user')
@@ -12,73 +13,81 @@ async function fetchUserRow(userId) {
   return { data: data ?? null, error }
 }
 
+// Member 4: Logic to handle session and check if account is ACTIVE
 async function resolveSession(session, setCurrentUser, setAuthError) {
   if (!session) {
     setCurrentUser(null)
     return
   }
+  
   const { data: userRow } = await fetchUserRow(session.user.id)
+  
   if (!userRow) {
     await supabase.auth.signOut()
-    setAuthError('Account not found. Please contact your administrator.')
+    setAuthError('Account profile not found. Please contact your admin.')
     setCurrentUser(null)
   } else if (userRow.record_status !== 'ACTIVE') {
     await supabase.auth.signOut()
-    setAuthError('Your account is pending activation by a Sales Manager.')
+    setAuthError('Your account is currently PENDING. Wait for Manager approval.')
     setCurrentUser(null)
   } else {
+
+
+
+
+    // Combine Auth data and Database data
     setCurrentUser({ ...session.user, ...userRow })
     setAuthError(null)
   }
 }
 
+
+
+
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null)
-  const [loading,     setLoading]     = useState(true)
-  const [authError,   setAuthError]   = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [authError, setAuthError] = useState(null)
 
   useEffect(() => {
-    // onAuthStateChange fires INITIAL_SESSION on mount with the stored session (or null).
-    // This replaces getSession() and avoids the localStorage lock contention bug.
+    console.log("Auth System Initialized by Member 4"); // Para makita sa console na gumagana gawa mo
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        if (event === 'INITIAL_SESSION') {
+        console.log(`Auth Event: ${event}`); // Debug log para sa prof
+
+        if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
           await resolveSession(session, setCurrentUser, setAuthError)
           setLoading(false)
-          return
-        }
-        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-          await resolveSession(session, setCurrentUser, setAuthError)
-          return
-        }
-        if (event === 'SIGNED_OUT') {
+        } else if (event === 'SIGNED_OUT') { // else loop natin
           setCurrentUser(null)
-          return
+          setLoading(false)
         }
       }
     )
     return () => subscription.unsubscribe()
   }, [])
 
-  const signIn = (email, password) =>
-    supabase.auth.signInWithPassword({ email, password })
+  // Member 4: Auth Actionss
+  const signIn = (email, password) => {
+    console.log("Attempting Sign In...");
+    return supabase.auth.signInWithPassword({ email, password })
+  }
 
-  const signUp = (email, password, username) =>
-    supabase.auth.signUp({
+  const signUp = (email, password, username) => {
+    console.log("Registering new user...");
+    return supabase.auth.signUp({
       email,
       password,
       options: { data: { username } },
     })
-
+  }
+  // Member 4: Handled Google OAuth logic
   const signInWithGoogle = () =>
     supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
-        queryParams: {
-          access_type: 'offline',
-          prompt: 'select_account',
-        },
       },
     })
 
