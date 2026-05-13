@@ -24,7 +24,7 @@ export default function PriceLookupPage() {
 
   const filtered = prices.filter(p => {
     const q = search.toLowerCase()
-    return p.prodCode?.toLowerCase().includes(q)
+    return p.prodcode?.toLowerCase().includes(q)
   })
 
   return (
@@ -68,10 +68,10 @@ export default function PriceLookupPage() {
             </thead>
             <tbody>
               {filtered.map((p, i) => (
-                <tr key={`${p.prodCode}-${p.effDate}`}>
-                  <td className="font-mono font-medium text-surface-700">{p.prodCode}</td>
-                  <td className="text-surface-600">{formatDate(p.effDate)}</td>
-                  <td className="text-right tabular-nums font-medium">{formatCurrency(p.unitPrice)}</td>
+                <tr key={`${p.prodcode}-${p.effdate}-${i}`}>
+                  <td className="font-mono font-medium text-surface-700">{p.prodcode}</td>
+                  <td className="text-surface-600">{formatDate(p.effdate)}</td>
+                  <td className="text-right tabular-nums font-medium">{formatCurrency(p.unitprice)}</td>
                 </tr>
               ))}
             </tbody>
