@@ -2,6 +2,7 @@ import { NavLink } from 'react-router-dom'
 import { useAuth }   from '../../contexts/AuthContext'
 import { useRights } from '../../contexts/RightsContext'
 
+// Icon Component para sa malinis na UI
 const Icon = ({ path, className = 'w-4 h-4' }) => (
   <svg className={className} fill="none" stroke="currentColor" strokeWidth={1.75}
        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -55,7 +56,9 @@ const ROLE_STYLE = {
 
 export default function Sidebar() {
   const { currentUser } = useAuth()
-  const { isAdmin }     = useRights()
+  
+  // Member 4: Gagamit tayo ng direct check sa user_type para sa Sprint 3 task [cite: 177]
+  const isAuthorized = currentUser?.user_type === 'ADMIN' || currentUser?.user_type === 'SUPERADMIN'
 
 
   const displayName = currentUser?.username
@@ -110,8 +113,9 @@ export default function Sidebar() {
         <SectionLabel>Analytics</SectionLabel>
         <NavItem to="/reports" icon="reports" label="Reports" />
 
-        {/* Admin/SuperAdmin only */}
-        {isAdmin && (
+        {/* Member 4 Task: W3 PR-01 - ADM_USER sidebar gating [cite: 171, 178] */}
+        {/* Ang Administration section ay lalabas lamang para sa ADMIN at SUPERADMIN */}
+        {isAuthorized && (
           <>
             <SectionLabel>Administration</SectionLabel>
             <NavItem to="/deleted-items" icon="trash" label="Deleted Items" />
