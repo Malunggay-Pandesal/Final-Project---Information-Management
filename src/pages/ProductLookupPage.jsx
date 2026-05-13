@@ -1,5 +1,5 @@
 /**
- * Product Lookup Page — READ-ONLY, no mutation buttons for any user type.
+ * Product Lookup page — READ-ONLY, no mutation buttons for any user type.
  */
 import { useEffect, useState } from 'react'
 import { getProducts } from '../services/lookupService'

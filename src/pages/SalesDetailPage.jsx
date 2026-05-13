@@ -13,16 +13,14 @@ import Spinner     from '../components/ui/Spinner'
 import AlertBanner from '../components/ui/AlertBanner'
 import EmptyState  from '../components/ui/EmptyState'
 
-// ── Add / Edit line item form ─────────────────────────────────────────────────
+// ── Add / Edit line item form─────────────────────────────────────────────────
 function DetailForm({ initial, products, onSave, onCancel, saving }) {
-  // View returns lowercase: prodcode, unitprice
   const [prodCode,     setProdCode]     = useState(initial?.prodcode  || '')
   const [quantity,     setQuantity]     = useState(initial?.quantity  || '')
   const [unitPrice,    setUnitPrice]    = useState(initial?.unitprice || '')
   const [loadingPrice, setLoadingPrice] = useState(false)
   const [errors,       setErrors]       = useState({})
 
-  // Auto-fill unit price when product changes
   async function handleProductChange(e) {
     const code = e.target.value
     setProdCode(code)
@@ -30,7 +28,7 @@ function DetailForm({ initial, products, onSave, onCancel, saving }) {
     if (!code) return
     setLoadingPrice(true)
     const { data } = await getCurrentPrice(code)
-    if (data) setUnitPrice(data.unitprice)   // view column is lowercase
+    if (data) setUnitPrice(data.unitprice)
     setLoadingPrice(false)
   }
 
@@ -55,7 +53,7 @@ function DetailForm({ initial, products, onSave, onCancel, saving }) {
           className={`input ${errors.prodCode ? 'input-error' : ''}`}
           value={prodCode}
           onChange={handleProductChange}
-          disabled={!!initial}  // locked when editing
+          disabled={!!initial}
         >
           <option value="">— Select product —</option>
           {products.map(p => (
@@ -102,13 +100,17 @@ function DetailForm({ initial, products, onSave, onCancel, saving }) {
         <div className="bg-surface-100 border border-surface-200 rounded-lg px-4 py-3">
           <p className="text-sm text-surface-700">
             Line total:{' '}
-            <span className="font-bold">{formatCurrency(parseFloat(unitPrice) * parseFloat(quantity))}</span>
+            <span className="font-bold">
+              {formatCurrency(parseFloat(unitPrice) * parseFloat(quantity))}
+            </span>
           </p>
         </div>
       )}
 
       <div className="modal-footer px-0 pb-0">
-        <button type="button" className="btn-secondary" onClick={onCancel} disabled={saving}>Cancel</button>
+        <button type="button" className="btn-secondary" onClick={onCancel} disabled={saving}>
+          Cancel
+        </button>
         <button type="submit" className="btn-primary" disabled={saving || loadingPrice}>
           {saving ? <><Spinner size="sm" /> Saving…</> : 'Save Line Item'}
         </button>
@@ -117,11 +119,13 @@ function DetailForm({ initial, products, onSave, onCancel, saving }) {
   )
 }
 
-// ── Page ─────────────────────────────────────────────────────────────────────
+// ── Page pading ─────────────────────────────────────────────────────────────────────
+
+
 export default function SalesDetailPage() {
   const { transNo }         = useParams()
   const { currentUser }     = useAuth()
-  const { rights, isAdmin } = useRights()
+  const { isAdmin, checkRight } = useRights()
 
   const [transaction, setTransaction] = useState(null)
   const [lines,       setLines]       = useState([])
@@ -149,7 +153,6 @@ export default function SalesDetailPage() {
       fetchLines(),
       getProducts().then(({ data }) => setProducts(data || [])),
     ]).then(([salesRes]) => {
-      // View column is now lowercase: transno
       const tx = (salesRes.data || []).find(s => s.transno === transNo)
       setTransaction(tx || null)
       setLoading(false)
@@ -170,7 +173,6 @@ export default function SalesDetailPage() {
 
   async function handleEdit(form) {
     setSaving(true)
-    // editTarget.prodcode is lowercase from the view
     const { error: err } = await updateDetailLine(transNo, editTarget.prodcode, {
       quantity: form.quantity, userId: currentUser.userId,
     })
@@ -199,7 +201,6 @@ export default function SalesDetailPage() {
     (sum, l) => sum + (parseFloat(l.quantity) * parseFloat(l.unitprice || 0)), 0
   )
 
-  // Products not yet in this transaction (compare lowercase prodcode)
   const availableProducts = products.filter(
     p => !lines.some(l => l.prodcode === p.prodcode)
   )
@@ -212,10 +213,15 @@ export default function SalesDetailPage() {
     )
   }
 
+  // Count columns: always 6 data cols + 1 actions col = 7
+  // If isAdmin: add Stamp col = 8
+  const dataColSpan = 5  // Product Code + Description + Unit + Unit Price + Quantity
+
   return (
     <div className="space-y-6">
       {/* Back link */}
-      <Link to="/sales" className="inline-flex items-center gap-2 text-sm text-surface-500 hover:text-surface-800">
+      <Link to="/sales"
+            className="inline-flex items-center gap-2 text-sm text-surface-500 hover:text-surface-800">
         <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
         </svg>
@@ -233,7 +239,8 @@ export default function SalesDetailPage() {
             <div>
               <div className="flex items-center gap-3 mb-1">
                 <h1 className="text-xl font-bold font-mono text-surface-900">{transaction.transno}</h1>
-                <span className={transaction.record_status === 'ACTIVE' ? 'badge badge-green' : 'badge badge-red'}>
+                <span className={transaction.record_status === 'ACTIVE'
+                  ? 'badge badge-green' : 'badge badge-red'}>
                   {transaction.record_status}
                 </span>
               </div>
@@ -241,7 +248,9 @@ export default function SalesDetailPage() {
             </div>
             <div className="text-right">
               <p className="text-2xl font-bold text-surface-900">{formatCurrency(totalAmount)}</p>
-              <p className="text-xs text-surface-400">{lines.length} line item{lines.length !== 1 ? 's' : ''}</p>
+              <p className="text-xs text-surface-400">
+                {lines.length} line item{lines.length !== 1 ? 's' : ''}
+              </p>
             </div>
           </div>
 
@@ -263,25 +272,31 @@ export default function SalesDetailPage() {
             {isAdmin && (
               <div>
                 <p className="stat-label">Stamp</p>
-                <p className="text-xs font-mono text-surface-400 break-all">{transaction.stamp || '—'}</p>
+                <p className="text-xs font-mono text-surface-400 break-all">
+                  {transaction.stamp || '—'}
+                </p>
               </div>
             )}
           </div>
         </div>
       ) : (
         <div className="card p-6">
-          <p className="text-surface-500">Transaction <span className="font-mono font-semibold">{transNo}</span> not found.</p>
+          <p className="text-surface-500">
+            Transaction <span className="font-mono font-semibold">{transNo}</span> not found.
+          </p>
         </div>
       )}
 
-      {/* Line items */}
+      {/* Line items section */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="text-base font-semibold text-surface-800">Line Items</h2>
+
           {/* Add line item — gated by SD_ADD */}
-          {rights.SD_ADD === 1 && transaction?.record_status === 'ACTIVE' && (
+          {checkRight('SD_ADD') && transaction?.record_status === 'ACTIVE' && (
             <button className="btn-primary btn-sm" onClick={() => setAddOpen(true)}>
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2}
+                   viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
               </svg>
               Add Line Item
@@ -294,7 +309,11 @@ export default function SalesDetailPage() {
             <EmptyState
               icon="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
               title="No line items yet"
-              description={rights.SD_ADD === 1 ? 'Add the first product to this transaction.' : 'No products in this transaction.'}
+              description={
+                checkRight('SD_ADD')
+                  ? 'Add the first product to this transaction.'
+                  : 'No products in this transaction.'
+              }
             />
           </div>
         ) : (
@@ -309,7 +328,8 @@ export default function SalesDetailPage() {
                   <th className="text-right">Quantity</th>
                   <th className="text-right">Line Total</th>
                   {isAdmin && <th>Stamp</th>}
-                  <th></th>
+                  {/* Actions col — always present so totals row aligns */}
+                  <th className="w-20"></th>
                 </tr>
               </thead>
               <tbody>
@@ -319,7 +339,9 @@ export default function SalesDetailPage() {
                     <td className="font-medium">{l.description}</td>
                     <td className="text-surface-500">{l.unit}</td>
                     <td className="text-right tabular-nums">{formatCurrency(l.unitprice)}</td>
-                    <td className="text-right tabular-nums">{parseFloat(l.quantity).toLocaleString()}</td>
+                    <td className="text-right tabular-nums">
+                      {parseFloat(l.quantity).toLocaleString()}
+                    </td>
                     <td className="text-right tabular-nums font-semibold">
                       {formatCurrency(parseFloat(l.quantity) * parseFloat(l.unitprice || 0))}
                     </td>
@@ -331,20 +353,30 @@ export default function SalesDetailPage() {
                     <td>
                       <div className="flex items-center gap-1 justify-end">
                         {/* Edit — gated by SD_EDIT */}
-                        {rights.SD_EDIT === 1 && (
-                          <button className="btn-ghost btn-sm" title="Edit quantity"
-                                  onClick={() => setEditTarget(l)}>
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        {checkRight('SD_EDIT') && (
+                          <button
+                            className="btn-ghost btn-sm"
+                            title="Edit quantity"
+                            onClick={() => setEditTarget(l)}
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor"
+                                 strokeWidth={2} viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round"
+                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
                           </button>
                         )}
-                        {/* Soft-delete — gated by SD_DEL */}
-                        {rights.SD_DEL === 1 && (
-                          <button className="btn-ghost btn-sm text-red-500 hover:bg-red-50"
-                                  title="Soft-delete line item" onClick={() => setDelTarget(l)}>
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        {/* Soft-delete — gated by SD_DEL (SUPERADMIN only) */}
+                        {checkRight('SD_DEL') && (
+                          <button
+                            className="btn-ghost btn-sm text-red-500 hover:bg-red-50"
+                            title="Soft-delete line item"
+                            onClick={() => setDelTarget(l)}
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor"
+                                 strokeWidth={2} viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round"
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                             </svg>
                           </button>
                         )}
@@ -352,11 +384,20 @@ export default function SalesDetailPage() {
                     </td>
                   </tr>
                 ))}
-                {/* Totals row */}
+
+                {/* ── Totals row — colSpan must match header exactly ── */}
                 <tr className="bg-surface-50 font-semibold">
-                  <td colSpan={5} className="text-right text-surface-700 pr-4">Total</td>
-                  <td className="text-right tabular-nums text-surface-900">{formatCurrency(totalAmount)}</td>
+                  {/* Product Code + Description + Unit + Unit Price + Quantity = 5 cols */}
+                  <td colSpan={5} className="text-right text-surface-700 px-4 py-3">
+                    Total
+                  </td>
+                  {/* Line Total */}
+                  <td className="text-right tabular-nums text-surface-900 px-4 py-3">
+                    {formatCurrency(totalAmount)}
+                  </td>
+                  {/* Stamp (admin only) */}
                   {isAdmin && <td />}
+                  {/* Actions  */}
                   <td />
                 </tr>
               </tbody>
@@ -386,15 +427,17 @@ export default function SalesDetailPage() {
         />
       </Modal>
 
-      {/* Delete confirm */}
+      {/* Soft-delete confirm */}
       <Modal
         open={!!delTarget}
         onClose={() => setDelTarget(null)}
         title="Soft-Delete Line Item"
         footer={
           <>
-            <button className="btn-secondary" onClick={() => setDelTarget(null)} disabled={deleting}>Cancel</button>
-            <button className="btn-danger"    onClick={handleDelete}             disabled={deleting}>
+            <button className="btn-secondary" onClick={() => setDelTarget(null)} disabled={deleting}>
+              Cancel
+            </button>
+            <button className="btn-danger" onClick={handleDelete} disabled={deleting}>
               {deleting ? <><Spinner size="sm" /> Deleting…</> : 'Yes, soft-delete'}
             </button>
           </>
