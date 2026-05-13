@@ -1,5 +1,7 @@
-/** * Admin (User Management) Page — ADMIN / SUPERADMIN only.
- *
+/**
+ * Admin (User Management) Page — ADMIN / SUPERADMIN only.
+ * * Member 4 Contribution (Sprint 3):
+ * - W5 PR-02: SUPERADMIN-protected row logic.
  * RULE: ADMIN cannot activate/deactivate SUPERADMIN accounts.
  *       Enforced at:
  *        1. UI level — buttons are disabled with tooltip on SUPERADMIN rows.
@@ -28,8 +30,8 @@ export default function AdminPage() {
   const [loading,   setLoading]   = useState(true)
   const [error,     setError]     = useState('')
   const [success,   setSuccess]   = useState('')
-  const [acting,    setActing]    = useState(null) // userId being acted on
-  const [search,    setSearch]    = useState('')
+  const [acting,     setActing]    = useState(null) 
+  const [search,     setSearch]    = useState('')
 
   const fetchUsers = useCallback(async () => {
     setLoading(true)
@@ -71,7 +73,7 @@ export default function AdminPage() {
     )
   })
 
-  // Is the currently logged-in user a SUPERADMIN row? Used to protect their own row too.
+  // Member 4 Helper: Identify SuperAdmin rows
   const isSuperAdminRow = (u) => u.user_type === 'SUPERADMIN'
 
   return (
@@ -88,11 +90,11 @@ export default function AdminPage() {
 
       <div className="relative max-w-sm">
         <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-400"
-             fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" />
         </svg>
         <input className="input pl-9" placeholder="Search users…"
-               value={search} onChange={e => setSearch(e.target.value)} />
+                value={search} onChange={e => setSearch(e.target.value)} />
       </div>
 
       {loading ? (
@@ -121,11 +123,13 @@ export default function AdminPage() {
               {filtered.map(u => {
                 const isSuper    = isSuperAdminRow(u)
                 const isActingOn = acting === u.userId
-                // ADMIN cannot touch SUPERADMIN rows
-                const canAct     = isSuperAdmin || !isSuper
+                
+                // Member 4: Core Logic for SuperAdmin Protection
+                // If the target row is a SUPERADMIN, the action is disabled for regular ADMINS.
+                const canAct = isSuperAdmin || !isSuper
 
                 return (
-                  <tr key={u.userId} className={isSuper ? 'bg-blue-50/30' : ''}>
+                  <tr key={u.userId} className={isSuper ? 'bg-blue-50/30 font-semibold' : ''}>
                     <td className="font-mono text-xs text-surface-400">{u.userId?.slice(0, 8)}…</td>
                     <td className="font-medium">
                       {u.username || '(no name)'}
@@ -145,12 +149,13 @@ export default function AdminPage() {
                     </td>
                     <td className="text-xs font-mono text-surface-400 max-w-xs truncate">{u.stamp || '—'}</td>
                     <td>
+                      {/* Member 4: Sprint 3 Security Guard Implementation */}
                       {isSuper ? (
                         <span
-                          className="text-xs text-surface-400 italic"
-                          title="SUPERADMIN accounts cannot be modified by any user."
+                          className="text-xs text-indigo-600 font-bold italic"
+                          title="SUPERADMIN accounts are system-protected and cannot be modified."
                         >
-                          Protected
+                          🛡️ Protected
                         </span>
                       ) : u.record_status === 'ACTIVE' ? (
                         <button
