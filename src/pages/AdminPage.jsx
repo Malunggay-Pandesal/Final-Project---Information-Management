@@ -1,5 +1,4 @@
-/**
- * Admin (User Management) Page — ADMIN / SUPERADMIN only.
+/** * Admin (User Management) Page — ADMIN / SUPERADMIN only.
  *
  * RULE: ADMIN cannot activate/deactivate SUPERADMIN accounts.
  *       Enforced at:

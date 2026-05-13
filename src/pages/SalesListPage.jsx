@@ -140,7 +140,7 @@ function ConfirmDialog({ open, onClose, onConfirm, loading, transNo }) {
 // ── Page ─────────────────────────────────────────────────────────────────────
 export default function SalesListPage() {
   const { currentUser }                   = useAuth()
-  const { rights, isAdmin, isSuperAdmin } = useRights()
+  const { isAdmin, isSuperAdmin, checkRight } = useRights()
 
   const [sales,     setSales]     = useState([])
   const [customers, setCustomers] = useState([])
@@ -250,7 +250,7 @@ export default function SalesListPage() {
           </p>
         </div>
         {/* Create button — gated by SALES_ADD */}
-        {rights.SALES_ADD === 1 && (
+        {checkRight('SALES_ADD') && (
           <button className="btn-primary" onClick={openAdd}>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
