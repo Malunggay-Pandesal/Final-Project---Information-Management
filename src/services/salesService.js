@@ -1,5 +1,4 @@
-/**
- * Sales Service
+/** * Sales Service
  * ─────────────
  * RULE: Hard DELETE is NEVER used anywhere in this file.
  *       All "deletions" set record_status = 'INACTIVE'.

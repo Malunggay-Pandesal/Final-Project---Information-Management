@@ -1,6 +1,6 @@
 -- ============================================================
--- Migration 02: Auth / Rights tables
--- user, Module, user_module, rights, UserModule_Rights
+-- Migration 02: auth / Rights tables
+-- user, module, user_module, rights, UserModule_Rights
 -- ============================================================
 
 CREATE TABLE IF NOT EXISTS public."user" (

@@ -1,13 +1,40 @@
 -- ============================================================
--- Migration 05 (updated): Auto-provision new users
--- SUPERADMIN emails are granted full access automatically.
--- All other users are provisioned as USER / INACTIVE.
---
--- SUPERADMIN emails:
---   jcesperanza@neu.edu.ph
---   janneogloria22@gmail.com
+-- Migration 05: Auto-Provision New Users
 -- ============================================================
-
+-- Purpose:
+-- Automatically creates application-level user records
+-- whenever a new account is created in auth.users.
+--
+-- Features:
+-- - Auto-creates records in public."user"
+-- - Assigns default modules and rights
+-- - Detects predefined SUPERADMIN emails
+-- - Grants SUPERADMIN users full system access
+-- - Provisions regular users as USER / INACTIVE
+--
+-- SUPERADMIN Emails:
+--   - jcesperanza@neu.edu.ph
+--   - janneogloria22@gmail.com
+--   - blumber14@gmail.com
+--
+-- Regular User Defaults:
+--   user_type      = USER
+--   record_status  = INACTIVE
+--
+-- SUPERADMIN Defaults:
+--   user_type      = SUPERADMIN
+--   record_status  = ACTIVE
+--
+-- Trigger:
+--   on_auth_user_created
+--   Fires AFTER INSERT on auth.users
+--
+-- Additional Notes:
+-- - Safe to re-run
+-- - Uses ON CONFLICT handling to prevent duplicates
+-- - Includes one-time SUPERADMIN upgrade fix
+--   for existing accounts
+-- ============================================================
 CREATE OR REPLACE FUNCTION public.provision_new_user()
 RETURNS TRIGGER
 LANGUAGE plpgsql

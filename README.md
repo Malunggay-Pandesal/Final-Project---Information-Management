@@ -1,6 +1,6 @@
 # Hope SMS — Sales Management System
 
-[Live demo](https://improject-hope-sms.netlify.app/)
+## [Live Deployed App](https://improject-hope-sms.netlify.app/)
 
 > BS Information Technology Capstone · New Era University · AY 2025–2026
 > Developed for Hope, Inc. as a 6-week sprint project

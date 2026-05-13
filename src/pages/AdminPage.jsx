@@ -1,11 +1,10 @@
-/**
- * Admin (User Management) Page — ADMIN / SUPERADMIN only.
+/** * Admin (User Management) Page — ADMIN / SUPERADMIN only.
  *
  * RULE: ADMIN cannot activate/deactivate SUPERADMIN accounts.
  *       Enforced at:
- *         1. UI level — buttons are disabled with tooltip on SUPERADMIN rows.
- *         2. Service level — .neq('user_type','SUPERADMIN') guard in adminService.
- *         3. DB level — RLS policy rejects UPDATE where user_type = 'SUPERADMIN'.
+ *        1. UI level — buttons are disabled with tooltip on SUPERADMIN rows.
+ *        2. Service level — .neq('user_type','SUPERADMIN') guard in adminService.
+ *        3. Db level — RLS policy rejects UPDATE where user_type = 'SUPERADMIN'.
  */
 import { useEffect, useState, useCallback } from 'react'
 import { useAuth }   from '../contexts/AuthContext'
