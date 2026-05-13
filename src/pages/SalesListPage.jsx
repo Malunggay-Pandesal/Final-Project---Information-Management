@@ -22,8 +22,6 @@ function SaleForm({ initial, customers, employees, onSave, onCancel, saving }) {
   })
   const [errors, setErrors] = useState({})
 
-
-  
   function validate() {
     const e = {}
     if (!form.transNo.trim())  e.transNo   = 'Transaction number is required.'
@@ -49,7 +47,7 @@ function SaleForm({ initial, customers, employees, onSave, onCancel, saving }) {
           className={`input font-mono ${errors.transNo ? 'input-error' : ''}`}
           value={form.transNo}
           onChange={set('transNo')}
-          disabled={!!initial?.transno}  // locked when editing
+          disabled={!!initial?.transno}
           placeholder="TR000125"
         />
         {errors.transNo && <p className="error-msg">{errors.transNo}</p>}
@@ -140,7 +138,7 @@ function ConfirmDialog({ open, onClose, onConfirm, loading, transNo }) {
 // ── Page ─────────────────────────────────────────────────────────────────────
 export default function SalesListPage() {
   const { currentUser }                   = useAuth()
-  const { isAdmin, isSuperAdmin, checkRight } = useRights()
+  const { rights, isAdmin, isSuperAdmin } = useRights()
 
   const [sales,     setSales]     = useState([])
   const [customers, setCustomers] = useState([])
@@ -150,7 +148,6 @@ export default function SalesListPage() {
   const [success,   setSuccess]   = useState('')
   const [search,    setSearch]    = useState('')
 
-  // Modal state
   const [addOpen,    setAddOpen]    = useState(false)
   const [editTarget, setEditTarget] = useState(null)
   const [delTarget,  setDelTarget]  = useState(null)
@@ -158,7 +155,6 @@ export default function SalesListPage() {
   const [deleting,   setDeleting]   = useState(false)
   const [recovering, setRecovering] = useState(null)
 
-  // Suggested next transno
   const [nextTrans, setNextTrans] = useState('')
 
   const fetchSales = useCallback(async () => {
@@ -228,7 +224,6 @@ export default function SalesListPage() {
     setRecovering(null)
   }
 
-  // Filter by search — all view columns are now lowercase
   const filtered = sales.filter(s => {
     const q = search.toLowerCase()
     return (
@@ -241,7 +236,6 @@ export default function SalesListPage() {
 
   return (
     <div className="space-y-6">
-      {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-surface-900">Sales Transactions</h1>
@@ -249,8 +243,7 @@ export default function SalesListPage() {
             {sales.length} active transaction{sales.length !== 1 ? 's' : ''}
           </p>
         </div>
-        {/* Create button — gated by SALES_ADD */}
-        {checkRight('SALES_ADD') && (
+        {rights.SALES_ADD === 1 && (
           <button className="btn-primary" onClick={openAdd}>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -260,11 +253,9 @@ export default function SalesListPage() {
         )}
       </div>
 
-      {/* Feedback banners */}
       {error   && <AlertBanner type="error"   message={error}   onDismiss={() => setError('')}   />}
       {success && <AlertBanner type="success" message={success} onDismiss={() => setSuccess('')} />}
 
-      {/* Search */}
       <div className="relative max-w-sm">
         <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-400"
              fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -278,7 +269,6 @@ export default function SalesListPage() {
         />
       </div>
 
-      {/* Table */}
       {loading ? (
         <div className="flex items-center justify-center py-20">
           <Spinner size="lg" />
@@ -342,14 +332,12 @@ export default function SalesListPage() {
                   )}
                   <td>
                     <div className="flex items-center gap-1 justify-end">
-                      {/* View detail */}
                       <Link to={`/sales/${s.transno}`} className="btn-ghost btn-sm" title="View details">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                           <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                         </svg>
                       </Link>
-                      {/* Edit — gated by SALES_EDIT, ACTIVE only */}
                       {rights.SALES_EDIT === 1 && s.record_status === 'ACTIVE' && (
                         <button className="btn-ghost btn-sm" title="Edit" onClick={() => setEditTarget(s)}>
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -357,7 +345,6 @@ export default function SalesListPage() {
                           </svg>
                         </button>
                       )}
-                      {/* Soft-delete — gated by SALES_DEL (SUPERADMIN only), ACTIVE only */}
                       {rights.SALES_DEL === 1 && s.record_status === 'ACTIVE' && (
                         <button className="btn-ghost btn-sm text-red-500 hover:text-red-700 hover:bg-red-50"
                                 title="Soft-delete" onClick={() => setDelTarget(s)}>
@@ -366,7 +353,6 @@ export default function SalesListPage() {
                           </svg>
                         </button>
                       )}
-                      {/* Recover — INACTIVE rows only, ADMIN / SUPERADMIN */}
                       {isAdmin && s.record_status === 'INACTIVE' && (
                         <button
                           className="btn-ghost btn-sm text-green-600 hover:text-green-800 hover:bg-green-50"
@@ -390,7 +376,6 @@ export default function SalesListPage() {
         </div>
       )}
 
-      {/* Add modal */}
       <Modal open={addOpen} onClose={() => setAddOpen(false)} title="New Sales Transaction">
         <SaleForm
           initial={{ transno: nextTrans }}
@@ -402,7 +387,6 @@ export default function SalesListPage() {
         />
       </Modal>
 
-      {/* Edit modal */}
       <Modal open={!!editTarget} onClose={() => setEditTarget(null)} title="Edit Sales Transaction">
         <SaleForm
           initial={editTarget}
@@ -414,7 +398,6 @@ export default function SalesListPage() {
         />
       </Modal>
 
-      {/* Soft-delete confirm */}
       <ConfirmDialog
         open={!!delTarget}
         onClose={() => setDelTarget(null)}
